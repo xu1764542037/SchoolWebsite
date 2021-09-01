@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.BranchDaoInter">
-    <insert id="add" parameterType="com.example.schoolwebsite.entity.Branch">
+    <insert id="add">
         insert into schoolwebsite.branch
             <trim>
             (branchId
             ,branchName
             ,createTime
-            <if test="branch.status1=null">
+            <if test="branch.status!=null">
                 ,status
             </if>
             <if test="branch.description!=null">
@@ -33,8 +33,10 @@
 
     <update id="Update">
         update schoolwebsite.branch set
-            <trim>
-                branchName = #{branch.branchName}
+            <trim suffixOverrides="," prefixOverrides=",">
+                <if test="branch.branchName!=null">
+                    branchName = #{branch.branchName}
+                </if>
                 <if test="branch.status!=null">
                     ,status = #{branch.status}
                 </if>
@@ -46,7 +48,7 @@
     </update>
 
     <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Branch">
-        select branchId,branchName,status,description from schoolwebsite.branch where branchName = #{branchName}
+        select branchId,branchName,status,description from schoolwebsite.branch where branchName like concat('%',#{branchName},'%')
     </select>
 
     <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Branch">

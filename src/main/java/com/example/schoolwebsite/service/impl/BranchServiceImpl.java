@@ -28,7 +28,7 @@ public class BranchServiceImpl implements BranchServiceInter {
                 backReturn.setMsg("该学院名称已存在，请勿重复添加");
                 return backReturn;
             }
-            if ("".equals(branch.getBranchName())){
+            if (!"".equals(branch.getBranchName())){
                 branch.setId(IdMaker.BranchIdMaker());
                 if (branchDaoInter.add(branch)>=0){
                     backReturn.setMsg("添加成功");
@@ -37,6 +37,9 @@ public class BranchServiceImpl implements BranchServiceInter {
                     backReturn.setCode(-1);
                     backReturn.setMsg("系统异常，添加失败");
                 }
+            }else {
+                backReturn.setMsg("学院名称不能为空");
+                backReturn.setCode(0);
             }
         }
         return backReturn;
@@ -84,6 +87,7 @@ public class BranchServiceImpl implements BranchServiceInter {
                 return backReturn;
             }
         }else{
+            branch.setId(IdMaker.BranchIdMaker());
             if (branchDaoInter.add(branch)>=0){
                 backReturn.setMsg("该分院不存在，已为您添加分院数据");
                 backReturn.setCode(0);
