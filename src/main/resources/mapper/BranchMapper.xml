@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.schoolwebsite.dao.BranchDaoInter">
+    <insert id="add" parameterType="com.example.schoolwebsite.entity.Branch">
+        insert into schoolwebsite.branch
+            <trim>
+            (branchId
+            ,branchName
+            ,createTime
+            <if test="branch.status1=null">
+                ,status
+            </if>
+            <if test="branch.description!=null">
+            ,description
+            </if>
+            )
+             value
+            (#{branch.id}
+            ,#{branch.branchName}
+            ,now()
+                <if test="branch.status!=null">
+                    ,#{branch.status}
+                </if>
+                <if test="branch.description!=null">
+                    ,#{branch.description}
+                </if>)
+            </trim>
+    </insert>
+
+    <delete id="delete">
+        delete from schoolwebsite.branch where branchId = #{branchId}
+    </delete>
+
+    <update id="Update">
+        update schoolwebsite.branch set
+            <trim>
+                branchName = #{branch.branchName}
+                <if test="branch.status!=null">
+                    ,status = #{branch.status}
+                </if>
+                <if test="branch.description">
+                    ,description = #{branch.description}
+                </if>
+            </trim>
+            where branchId = #{branch.id}
+    </update>
+
+    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Branch">
+        select branchId,branchName,status,description from schoolwebsite.branch where branchName = #{branchName}
+    </select>
+
+    <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Branch">
+        select branchId,branchName,status,description from schoolwebsite.branch where branchId = #{branchId}
+    </select>
+
+    <select id="select" resultType="com.example.schoolwebsite.entity.Branch">
+        select branchId,branchName,status,description from schoolwebsite.branch
+    </select>
+
+</mapper>
