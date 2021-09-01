@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.schoolwebsite.dao.ProfessionDaoInter">
+    <resultMap id="res" type="com.example.schoolwebsite.entity.Profession">
+        <id column="professionId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+        <result column="professionName" jdbcType="VARCHAR" javaType="java.lang.String" property="professionName"/>
+        <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
+            <result column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+            <result column="branchName" jdbcType="VARCHAR" javaType="java.lang.String" property="branchName"/>
+        </association>
+    </resultMap>
+
+    <insert id="add">
+        insert into schoolwebsite.profession
+        <trim>
+            (professionId
+            ,professionName
+            ,branch
+            ,createTime
+            <if test="profession.status!=null">
+                ,status
+            </if>
+            <if test="profession.description!=null">
+                ,description
+            </if>
+            )
+        </trim>
+             value
+        <trim>
+            (#{profession.id}
+            ,#{profession.professionName}
+            ,#{profession.branch.id}
+            ,now()
+            <if test="profession.status!=null">
+            ,#{profession.status}
+            </if>
+            <if test="profession.description!=null">
+            ,#{profession.description}
+            </if>
+            )
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        delete from schoolwebsite.profession where professionId = #{professionId}
+    </delete>
+
+    <update id="update">
+        update schoolwebsite.profession set
+        <trim>
+            <if test="profession.professionName!=null">
+                professionName = #{profession.professionName}
+            </if>
+            <if test="profession.branch!=null">
+                <if test="profession.branch.id!=0">
+                    ,branch = #{profession.branch.id}
+                </if>
+            </if>
+            <if test="profession.status!=null">
+                ,status = #{profession.status}
+            </if>
+            <if test="profession.description!=null">
+                ,description = #{profession.description}
+            </if>
+        </trim>
+        where professionId = #{profession.id}
+    </update>
+
+    <select id="selectbyid" resultMap="res">
+        select
+               profession.professionId,
+               profession.professionName,
+               profession.status,
+               profession.description,
+               branch.branchId,
+               branch.branchName
+        from schoolwebsite.profession,
+             schoolwebsite.branch
+        where
+              profession.branch = branch.branchId and
+              profession.professionId = #{professionId}
+    </select>
+
+    <select id="selectbyname" resultMap="res">
+        select
+            profession.professionId,
+            profession.professionName,
+            profession.status,
+            profession.description,
+            branch.branchId,
+            branch.branchName
+        from schoolwebsite.profession,
+             schoolwebsite.branch
+        where
+            profession.branch = branch.branchId and
+            profession.professionName like CONCAT('%',#{professionName})
+            <if test="branch!=null">
+                and profession.branch = #{branch}
+            </if>
+    </select>
+
+    <select id="select" resultMap="res">
+        select
+            profession.professionId,
+            profession.professionName,
+            profession.status,
+            profession.description,
+            branch.branchId,
+            branch.branchName
+        from schoolwebsite.profession,
+             schoolwebsite.branch
+        where
+            profession.branch = branch.branchId
+    </select>
+
+</mapper>
