@@ -47,7 +47,7 @@
 
     <update id="update">
         update schoolwebsite.profession set
-        <trim>
+        <trim prefixOverrides=",">
             <if test="profession.professionName!=null">
                 professionName = #{profession.professionName}
             </if>

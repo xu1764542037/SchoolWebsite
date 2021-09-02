@@ -51,7 +51,7 @@
 
     <update id="update">
         update schoolwebsite.class set
-        <trim>
+        <trim prefixOverrides=",">
             <if test="classes.className!=null">
                 className = #{classes.className}
             </if>

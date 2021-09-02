@@ -99,7 +99,9 @@ public class ClassServiceImpl implements ClassServiceInter {
         if (classes!=null){
             if (classes.getId()!=null){
                 if (classDaoInter.selectbyid(classes.getId()).size()>0){
-                    classes.setClassName(CheckClassName(classes.getClassName()).getMsg());
+                    if (classes.getClassName()!=null&&!"".equals(classes.getClassName())){
+                        classes.setClassName(CheckClassName(classes.getClassName()).getMsg());
+                    }
                     if (classDaoInter.update(classes)>=0) {
                         backReturn.setMsg("修改成功");
                         backReturn.setCode(1);
