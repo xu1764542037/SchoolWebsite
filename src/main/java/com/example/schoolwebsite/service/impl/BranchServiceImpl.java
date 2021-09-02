@@ -17,7 +17,7 @@ public class BranchServiceImpl implements BranchServiceInter {
     private BranchDaoInter branchDaoInter;
 
     @Override
-    public BackReturn add(Branch branch) throws Exception {
+    public BackReturn add(Branch branch){
         BackReturn backReturn = new BackReturn();
         if (branch==null){
             backReturn.setCode(0);
@@ -46,7 +46,7 @@ public class BranchServiceImpl implements BranchServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer branchId) throws Exception {
+    public BackReturn delete(Integer branchId){
         BackReturn backReturn = new BackReturn();
         if (branchId==null){
             backReturn.setCode(0);
@@ -69,7 +69,7 @@ public class BranchServiceImpl implements BranchServiceInter {
     }
 
     @Override
-    public BackReturn update(Branch branch) throws Exception {
+    public BackReturn update(Branch branch){
         BackReturn backReturn = new BackReturn();
         if (branchDaoInter.selectbyid(branch.getId()).size()>0) {
             if ("".equals(branch.getBranchName())) {
@@ -100,8 +100,7 @@ public class BranchServiceImpl implements BranchServiceInter {
     }
 
     @Override
-    public BackReturn select(String branchName) throws Exception
-    {
+    public BackReturn select(String branchName){
         BackReturn backReturn = new BackReturn();
         List<Branch> branches;
         if ("".equals(branchName)) {

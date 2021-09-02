@@ -21,7 +21,7 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     private BranchDaoInter branchDaoInter;
 
     @Override
-    public BackReturn add(Profession profession) throws Exception {
+    public BackReturn add(Profession profession){
         BackReturn backReturn = new BackReturn();
         if (profession==null) {
             backReturn.setMsg("添加内容为空，添加失败");
@@ -59,7 +59,7 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer professionId) throws Exception {
+    public BackReturn delete(Integer professionId){
         BackReturn backReturn = new BackReturn();
         if (professionId==null) {
             backReturn.setMsg("输入的删除条件无效，删除失败");
@@ -82,7 +82,7 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     }
 
     @Override
-    public BackReturn update(Profession profession) throws Exception {
+    public BackReturn update(Profession profession){
         BackReturn backReturn = new BackReturn();
         if (professionDaoInter.selectbyid(profession.getId()).size()>0) {
             if (professionDaoInter.update(profession)>=0) {
@@ -100,7 +100,7 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     }
 
     @Override
-    public BackReturn select(String professionName) throws Exception {
+    public BackReturn select(String professionName){
         BackReturn backReturn = new BackReturn();
         List<Profession> professions;
         if (!"".equals(professionName)){
