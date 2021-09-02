@@ -10,7 +10,6 @@ import java.util.Date;
 public class Course{
     private Integer id;
     private String courseName;
-    private Date createTime;
     private String status;
     private String description;
 }
