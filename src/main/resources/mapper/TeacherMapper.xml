@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.schoolwebsite.dao.TeacherDaoInter">
+
+    <insert id="add">
+        insert into schoolwebsite.teacher
+        <trim>
+            (teacherId
+            ,teacherName
+            ,teacherSex
+            ,branch
+            ,teacherLevel
+            ,createTime
+            ,status
+            ,description
+            ,teacherSalary
+            )
+        </trim>
+        VALUE
+        <trim>
+            ()
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        delete from
+    </delete>
+
+    <update id="update">
+        update [] set
+    </update>
+
+    <select id="selectbyname">
+        select * from
+    </select>
+
+    <select id="selectbyid">
+        select * from
+    </select>
+
+    <select id="select">
+        select * from
+    </select>
+</mapper>

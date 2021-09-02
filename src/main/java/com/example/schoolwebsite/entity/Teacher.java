@@ -10,11 +10,10 @@ import java.util.Date;
 public class Teacher {
     private Integer id;
     private String teacherId;
-    private String Sex;
-    private Integer Salary;
-    private String Level;
-    private Date createTime;
+    private String sex;
+    private Branch branch;
+    private String level;
+    private Integer salary;
     private String status;
     private String description;
-
 }
