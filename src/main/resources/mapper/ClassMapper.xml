@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.schoolwebsite.dao.ClassDaoInter">
+
+    <resultMap id="res" type="com.example.schoolwebsite.entity.Class">
+        <id column="classId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+        <result column="className" jdbcType="VARCHAR" javaType="java.lang.String" property="className"/>
+        <result column="status" jdbcType="VARCHAR" javaType="java.lang.String" property="status"/>
+        <result column="description" jdbcType="VARCHAR" javaType="java.lang.String" property="description"/>
+        <association property="profession" javaType="com.example.schoolwebsite.entity.Profession">
+            <id property="id" jdbcType="INTEGER" javaType="java.lang.Integer" column="professionId"/>
+            <result property="professionName" column="professionName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </association>
+    </resultMap>
+
+    <insert id="add">
+        insert into schoolwebsite.class
+        <trim>
+            (classId
+            ,className
+            ,profession
+            ,createTime
+            ,endTime
+            <if test="classes.status">
+            ,status
+            </if>
+            <if test="classes.description">
+            ,description
+            </if>
+            )
+        </trim>
+        value
+        <trim>
+            (#{classes.id}
+            ,#{classes.className}
+            ,#{classes.profession.id}
+            ,now()
+            ,date_add(now(),INTERVAL 3 YEAR)
+            <if test="classes.status!=null">
+            ,#{classes.status}
+            </if>
+            <if test="classes.description!=null">
+            ,#{classes.description}
+            </if>
+            )
+        </trim>
+    </insert>
+    <delete id="delete">
+        delete from schoolwebsite.class where classId = #{classId}
+    </delete>
+
+    <update id="update">
+        update schoolwebsite.class set
+        <trim>
+            <if test="classes.className!=null">
+                className = #{classes.className}
+            </if>
+            <if test="classes.profession!=null">
+                <if test="classes.profession.id!=0">
+                    ,profession = #{classes.profession.id}
+                </if>
+            </if>
+            <if test="classes.status!=null">
+                ,status = #{classes.status}
+            </if>
+            <if test="classes.description!=null">
+                ,description = #{classes.description}
+            </if>
+        </trim>
+        where classId = #{classes.id}
+    </update>
+
+    <select id="selectbyname" resultMap="res">
+        select class.classId,
+               class.className,
+               class.status,
+               class.description,
+               profession.professionId,
+               profession.professionName
+        from schoolwebsite.class,
+             schoolwebsite.profession
+        where class.profession = profession.professionId and
+              class.className like CONCAT('%',#{className})
+            <if test="profession!=null">
+                and class.profession = #{profession}
+            </if>
+    </select>
+
+    <select id="selectbyid" resultMap="res">
+        select class.classId,
+               class.className,
+               class.status,
+               class.description,
+               profession.professionId,
+               profession.professionName
+        from schoolwebsite.class,
+             schoolwebsite.profession
+        where class.profession = profession.professionId and
+            class.classId = #{classId}
+    </select>
+
+    <select id="select" resultMap="res">
+        select class.classId,
+               class.className,
+               class.status,
+               class.description,
+               profession.professionId,
+               profession.professionName
+        from schoolwebsite.class,
+             schoolwebsite.profession
+        where class.profession = profession.professionId
+    </select>
+
+
+</mapper>

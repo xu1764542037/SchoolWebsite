@@ -15,4 +15,10 @@ public class IdMaker {
         for (int i = 0; i < 3; i++) { stringBuilder.append((int)Math.floor(Math.random()*10)); }
         return Integer.parseInt(stringBuilder.toString());
     }
+    public static Integer ClassIdMaker(Integer ProfessionId){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(ProfessionId);
+        for (int i = 0; i < 2; i++) { stringBuilder.append((int)Math.floor(Math.random()*10));}
+        return Integer.parseInt(stringBuilder.toString());
+    }
 }
