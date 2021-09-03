@@ -26,4 +26,9 @@ public class IdMaker {
         for (int i = 0; i < 3; i++) { stringBuilder.append((int)Math.floor(Math.random()*10));}
         return Integer.parseInt(stringBuilder.toString());
     }
+    public static Integer Teacher_CourseIdMaker(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 5; i++) { stringBuilder.append((int)Math.floor(Math.random()*10));}
+        return Integer.parseInt(stringBuilder.toString());
+    }
 }
