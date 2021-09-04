@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.schoolwebsite.dao.StudentDaoInter">
+
+    <resultMap id="res" type="com.example.schoolwebsite.entity.Student">
+        <id property="id" jdbcType="INTEGER" javaType="java.lang.Integer" column="studentId"/>
+        <result property="idcardnumber" jdbcType="VARCHAR" javaType="java.lang.String" column="IdCardNumber"/>
+        <result property="studentName" jdbcType="VARCHAR" javaType="java.lang.String" column="studentName"/>
+        <result property="sex" jdbcType="VARCHAR" javaType="java.lang.String" column="studentSex"/>
+        <result property="age" jdbcType="INTEGER" javaType="java.lang.Integer" column="studentAge"/>
+        <result property="tel" jdbcType="VARCHAR" javaType="java.lang.String" column="studentTel"/>
+        <result property="tel" jdbcType="VARCHAR" javaType="java.lang.String" column="studentTel"/>
+        <result property="qq" jdbcType="VARCHAR" javaType="java.lang.String" column="studentQQ"/>
+        <result property="address" jdbcType="VARCHAR" javaType="java.lang.String" column="studentAddress"/>
+        <result property="status" jdbcType="VARCHAR" javaType="java.lang.String" column="status"/>
+        <result property="description" jdbcType="VARCHAR" javaType="java.lang.String" column="description"/>
+        <association property="profession" javaType="com.example.schoolwebsite.entity.Profession">
+            <id property="id" jdbcType="INTEGER" javaType="java.lang.Integer" column="professionId"/>
+            <result property="professionName" jdbcType="VARCHAR" javaType="java.lang.String" column="professionName"/>
+        </association>
+        <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
+            <id property="id" jdbcType="INTEGER" javaType="java.lang.Integer" column="branchId"/>
+            <result property="branchName" jdbcType="VARCHAR" javaType="java.lang.String" column="branchName"/>
+        </association>
+        <association property="classes" javaType="com.example.schoolwebsite.entity.Class">
+            <id property="id" jdbcType="INTEGER" javaType="java.lang.Integer" column="classId"/>
+            <result property="className" jdbcType="VARCHAR" javaType="java.lang.String" column="className"/>
+        </association>
+    </resultMap>
+
+    <insert id="add">
+        insert into schoolwebsite.student
+        <trim>
+            ( studentId
+            , IdCardNumber
+            , studentName
+            , studentSex
+            , studentAge
+            , studentProfession
+            , studentBranch
+            , studentClass
+            <if test="student.tel!=null">
+            , studentTel
+            </if>
+            <if test="student.qq!=null">
+            , studentQQ
+            </if>
+            <if test="student.address!=null">
+            , studentAddress
+            </if>
+            , createTime
+            <if test="student.status!=null">
+            , status
+            </if>
+            <if test="student.description!=null">
+            , description
+            </if>
+            )
+        </trim>
+            VALUE
+        <trim>
+            (#{student.id}
+            ,#{student.idcardnumber}
+            ,#{student.studentName}
+            ,#{student.sex}
+            ,#{student.age}
+            ,#{student.profession.id}
+            ,#{student.branch.id}
+            ,#{student.classes.id}
+            <if test="student.Tel!=null">
+            ,#{student.tel}
+            </if>
+            <if test="student.QQ!=null">
+            ,#{student.qq}
+            </if>
+            <if test="student.Address!=null">
+            ,#{student.address}
+            </if>
+            ,NOW()
+            <if test="student.status!=null">
+            ,#{student.status}
+            </if>
+            <if test="student.description!=null">
+            ,#{student.description}
+            </if>
+            )
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        delete from schoolwebsite.student where student.studentId = #{studentId}
+    </delete>
+
+    <update id="update">
+        update schoolwebsite.student set
+        <trim prefixOverrides=",">
+            <if test="student.studentName!=null">
+            studentName = #{student.studentName}
+            </if>
+            <if test="student.sex!=null">
+            ,studentSex = #{student.sex}
+            </if>
+            <if test="student.Age!=null">
+            ,studentAge = #{student.age}
+            </if>
+            <if test="student.profession!=null">
+                <if test="student.profession.id!=null">
+                    ,studentProfession = #{student.profession.id}
+                </if>
+            </if>
+            <if test="student.branch!=null">
+                <if test="student.branch.id!=null">
+                    ,studentBranch = #{student.branch.id}
+                </if>
+            </if>
+            <if test="student.classes!=null">
+                <if test="student.classes.id!=null">
+                    , studentClass = #{student.classes.id}
+                </if>
+            </if>
+            <if test="student.tel!=null">
+            ,studentTel = #{student.tel}
+            </if>
+            <if test="student.qq!=null">
+            ,studentQQ = #{student.qq}
+            </if>
+            <if test="student.address!=null">
+            ,studentAddress = #{student.address}
+            </if>
+            <if test="student.status!=null">
+            ,status = #{student.status}
+            </if>
+            <if test="student.description!=null">
+            ,description = #{student.description}
+            </if>
+        </trim>
+            where studentId = #{student.id}
+        <if test="student.idcardnumber!=null">
+            and IdCardNumber = #{student.idcardnumber}
+        </if>
+    </update>
+
+    <select id="selectbyname" resultMap="res">
+        select student.studentId        , student.IdCardNumber
+             , student.studentName      , student.studentSex
+             , student.studentAge       , student.studentProfession
+             , student.studentBranch    , student.studentClass
+             , student.studentTel       , student.studentQQ
+             , student.studentAddress   , student.createTime
+             , student.status           , student.description
+             , profession.professionId  , profession.professionName
+             , class.classId            , class.className
+             , branch.branchId          , branch.branchName
+        from   schoolwebsite.student    ,schoolwebsite.profession
+             , schoolwebsite.class      ,schoolwebsite.branch
+            where schoolwebsite.student.studentBranch = schoolwebsite.branch.branchId
+            and schoolwebsite.student.studentClass = schoolwebsite.class.classId
+            and schoolwebsite.student.studentProfession = schoolwebsite.profession.professionId
+            <if test="studentName!=null">
+            and schoolwebsite.student.studentName like CONCAT(#{studentName},'%')
+            </if>
+            <if test="branch!=null">
+            and schoolwebsite.student.studentBranch = #{branch}
+            </if>
+            <if test="Class!=null">
+                and schoolwebsite.class.className like CONCAT(#{Class},'%')
+            </if>
+    </select>
+
+    <select id="selectbyid" resultMap="res">
+        select student.studentId        , student.IdCardNumber
+             , student.studentName      , student.studentSex
+             , student.studentAge       , student.studentProfession
+             , student.studentBranch    , student.studentClass
+             , student.studentTel       , student.studentQQ
+             , student.studentAddress   , student.createTime
+             , student.status           , student.description
+             , profession.professionId  , profession.professionName
+             , class.classId            , class.className
+             , branch.branchId          , branch.branchName
+        from   schoolwebsite.student    ,schoolwebsite.profession
+           , schoolwebsite.class      ,schoolwebsite.branch
+        where schoolwebsite.student.studentBranch = schoolwebsite.branch.branchId
+          and schoolwebsite.student.studentClass = schoolwebsite.class.classId
+          and schoolwebsite.student.studentProfession = schoolwebsite.profession.professionId
+        <if test="IdCardNumber!=null">
+            and student.IdCardNumber = #{IdCardNumber}
+        </if>
+        <if test="studentId!=null">
+            and student.studentId = #{studentId}
+        </if>
+    </select>
+
+</mapper>

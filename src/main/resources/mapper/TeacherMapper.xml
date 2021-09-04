@@ -1,44 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.TeacherDaoInter">
+    <resultMap id="res" type="com.example.schoolwebsite.entity.Teacher">
+        <id column="teacherId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+        <result column="IdCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" property="idcardnumber"/>
+        <result column="teacherName" jdbcType="VARCHAR" javaType="java.lang.String" property="teacherName"/>
+        <result column="teacherSex" jdbcType="VARCHAR" javaType="java.lang.String" property="sex"/>
+        <result column="teacherLevel" jdbcType="VARCHAR" javaType="java.lang.String" property="level"/>
+        <result column="teacherSalary" jdbcType="INTEGER" javaType="java.lang.Integer" property="salary"/>
+        <result column="status" jdbcType="VARCHAR" javaType="java.lang.String" property="status"/>
+        <result column="description" jdbcType="VARCHAR" javaType="java.lang.String" property="description"/>
+        <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
+            <id column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+            <result column="branchName" jdbcType="VARCHAR" javaType="java.lang.String" property="branchName"/>
+        </association>
+    </resultMap>
+
 
     <insert id="add">
         insert into schoolwebsite.teacher
         <trim>
             (teacherId
+            ,IdCardNumber
             ,teacherName
             ,teacherSex
             ,branch
+            <if test="teacher.level!=null">
             ,teacherLevel
+            </if>
             ,createTime
+            <if test="teacher.status!=null">
             ,status
+            </if>
+            <if test="teacher.description!=null">
             ,description
+            </if>
             ,teacherSalary
             )
         </trim>
         VALUE
-        <trim>
-            ()
+        <trim prefixOverrides=",">
+            (#{teacher.id}
+            ,#{teacher.idcardnumber}
+            ,#{teacher.teacherName}
+            ,#{teacher.sex}
+            ,#{teacher.branch.id}
+            <if test="teacher.level!=null">
+            ,#{teacher.level}
+            </if>
+            ,now()
+            <if test="teacher.status!=null">
+            ,#{teacher.status}
+            </if>
+            <if test="teacher.description!=null">
+            ,#{teacher.description}
+            </if>
+            ,#{teacher.salary}
+            )
         </trim>
     </insert>
 
     <delete id="delete">
-        delete from
+        delete from schoolwebsite.teacher where teacherId = #{teacherId}
     </delete>
 
     <update id="update">
-        update [] set
+        update schoolwebsite.teacher set
+        <trim suffixOverrides=",">
+        <if test="teacher.teacherName!=null">
+            teacherName = #{teacher.teacherName},
+        </if>
+        <if test="teacher.sex!=null">
+            teacherSex = #{teacher.sex},
+        </if>
+        <if test="teacher.branch!=null">
+            <if test="teacher.branch.id!=null">
+                branch = #{teacher.branch.id},
+            </if>
+        </if>
+        <if test="teacher.level!=null">
+            teacherLevel = #{teacher.level},
+        </if>
+        <if test="teacher.salary!=null">
+            teacherSalary = #{teacher.salary},
+        </if>
+        <if test="teacher.status!=null">
+            status = #{teacher.status},
+        </if>
+        <if test="teacher.description!=null">
+            description = #{teacher.description}
+        </if>
+        </trim>
+        where teacherId = #{teacher.id}
+        <if test="teacher.idcardnumber!=null">
+            and IdCardNumber = #{teacher.idcardnumber}
+        </if>
     </update>
 
-    <select id="selectbyname">
-        select * from
+    <select id="selectbyname" resultMap="res">
+        select teacher.teacherId
+             , teacher.IdCardNumber
+             , teacher.teacherName
+             , teacher.teacherSex
+             , teacher.branch
+             , teacher.teacherLevel
+             , teacher.teacherSalary
+             , teacher.createTime
+             , teacher.status
+             , teacher.description
+             , branch.branchId
+             , branch.branchName
+            from
+             schoolwebsite.teacher,
+             schoolwebsite.branch
+            where
+             teacher.branch = branch.branchId
+            <if test="teacherName!=null">
+            and teacher.teacherName like CONCAT(#{teacherName},'%')
+            </if>
+            <if test="branch!=null">
+            and teacher.branch = #{branch}
+            </if>
     </select>
 
-    <select id="selectbyid">
-        select * from
-    </select>
-
-    <select id="select">
-        select * from
+    <select id="selectbyid" resultMap="res">
+        select teacher.teacherId
+        , teacher.IdCardNumber
+        , teacher.teacherName
+        , teacher.teacherSex
+        , teacher.branch
+        , teacher.teacherLevel
+        , teacher.teacherSalary
+        , teacher.createTime
+        , teacher.status
+        , teacher.description
+        , branch.branchId
+        , branch.branchName
+        from
+        schoolwebsite.teacher,
+        schoolwebsite.branch
+        where
+        teacher.branch = branch.branchId
+        <if test="IdCardNumber!=null">
+            and teacher.IdCardNumber = #{IdCardNumber}
+        </if>
+        <if test="teacherId!=null">
+            and teacher.teacherId = #{teacherId}
+        </if>
     </select>
 </mapper>

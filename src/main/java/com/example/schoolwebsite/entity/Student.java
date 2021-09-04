@@ -9,14 +9,16 @@ import java.util.Date;
 @Component
 public class Student{
     private Integer id;
+    private String idcardnumber;
     private String studentName;
-    private String Sex;
-    private Integer Age;
+    private String sex;
+    private Integer age;
     private Profession profession;
-    private Class Classes;
-    private String Tel;
-    private String QQ;
-    private String Address;
+    private Branch branch;
+    private Class classes;
+    private String tel;
+    private String qq;
+    private String address;
     private Date createTime;
     private String status;
     private String description;

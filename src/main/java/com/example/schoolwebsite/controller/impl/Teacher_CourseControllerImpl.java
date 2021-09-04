@@ -25,7 +25,7 @@ public class Teacher_CourseControllerImpl implements Teacher_CourseControllerInt
 
     @Override
     @GetMapping("/delete")
-    public BackReturn delete(@RequestParam(value = "teacher_courseId") Integer teacher_courseId) {
+    public BackReturn delete(@RequestParam(value = "id") Integer teacher_courseId) {
         return teacher_courseService.delete(teacher_courseId);
     }
 
@@ -37,7 +37,7 @@ public class Teacher_CourseControllerImpl implements Teacher_CourseControllerInt
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(@RequestParam(value = "teacherName", defaultValue = "", required = false) String TeacherName, @RequestParam(value = "teacherName", defaultValue = "", required = false) String CourseName) {
+    public BackReturn select(@RequestParam(value = "name", defaultValue = "", required = false) String TeacherName, @RequestParam(value = "teacherName", defaultValue = "", required = false) String CourseName) {
         return teacher_courseService.select(TeacherName, CourseName);
     }
 }

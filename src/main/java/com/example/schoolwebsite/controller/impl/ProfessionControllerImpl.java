@@ -25,7 +25,7 @@ public class ProfessionControllerImpl implements ProfessionControllerInter {
 
     @Override
     @GetMapping("/delete")
-    public BackReturn delete(@RequestParam(value = "professionId") Integer professionId) {
+    public BackReturn delete(@RequestParam(value = "id") Integer professionId) {
             return professionService.delete(professionId);
     }
 
@@ -37,7 +37,7 @@ public class ProfessionControllerImpl implements ProfessionControllerInter {
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(@RequestParam(value = "professionName",defaultValue = "",required = false) String professionName) {
+    public BackReturn select(@RequestParam(value = "name",defaultValue = "",required = false) String professionName) {
             return professionService.select(professionName);
     }
 }
