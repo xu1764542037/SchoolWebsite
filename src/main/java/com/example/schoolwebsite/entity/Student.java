@@ -9,6 +9,7 @@ import java.util.Date;
 @Component
 public class Student{
     private Integer id;
+    private String idcardnumber;
     private String studentName;
     private String Sex;
     private Integer Age;

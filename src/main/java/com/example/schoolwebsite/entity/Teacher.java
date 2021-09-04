@@ -9,7 +9,8 @@ import java.util.Date;
 @Data
 public class Teacher {
     private Integer id;
-    private String teacherId;
+    private String idcardnumber;
+    private String teacherName;
     private String sex;
     private Branch branch;
     private String level;
