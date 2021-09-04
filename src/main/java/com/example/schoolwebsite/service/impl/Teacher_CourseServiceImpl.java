@@ -42,7 +42,7 @@ public class Teacher_CourseServiceImpl implements Teacher_CourseServiceInter {
                 //CourseId值是否有效
                 if(teacher_course.getTeacher().getId()!=null&&teacher_course.getTeacher().getId()!=0){
                     //TeacherId是否位于Teacher表中
-                    if (teacherDaoInter.selectbyid(teacher_course.getTeacher().getId()).size()<=0){
+                    if (teacherDaoInter.selectbyid(teacher_course.getTeacher().getIdcardnumber()).size()<=0){
                         teacher_course.setTeacher(null);
                     }
                 }
@@ -105,7 +105,7 @@ public class Teacher_CourseServiceImpl implements Teacher_CourseServiceInter {
                 //判断CourseId值是否有效
                 if(teacher_course.getTeacher().getId()!=null&&teacher_course.getTeacher().getId()!=0){
                     //判断TeacherId是否位于Teacher表中
-                    if (teacherDaoInter.selectbyid(teacher_course.getTeacher().getId()).size()<=0){
+                    if (teacherDaoInter.selectbyid(teacher_course.getTeacher().getIdcardnumber()).size()<=0){
                         teacher_course.setTeacher(null);
                     }
                 }
