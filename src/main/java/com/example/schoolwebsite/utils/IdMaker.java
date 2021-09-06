@@ -45,4 +45,9 @@ public class IdMaker {
         for (int i = 0; i < 2; i++) {stringBuilder.append((int)Math.floor(Math.random()*10));}
         return Integer.parseInt(stringBuilder.toString());
     }
+    public static Integer GradeIdMaker(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 8; i++) {stringBuilder.append((int)Math.floor(Math.random()*10));}
+        return Integer.parseInt(stringBuilder.toString());
+    }
 }
