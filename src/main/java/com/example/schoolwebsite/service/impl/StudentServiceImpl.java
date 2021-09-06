@@ -60,7 +60,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                         branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
                         classDaoInter.selectbyid(student.getClasses().getId()).size()>0
                 ){
-                    student.setId(IdMaker.StudentIdMaker(student.getBranch().getId(),student.getClasses().getId()));
+                    student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
                     if (studentDaoInter.add(student)>=0) {
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);

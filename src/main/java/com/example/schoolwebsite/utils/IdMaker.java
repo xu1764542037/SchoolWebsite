@@ -38,7 +38,7 @@ public class IdMaker {
         for (int i = 0; i < 3; i++) { stringBuilder.append((int)Math.floor(Math.random()*10));}
         return Integer.parseInt(stringBuilder.toString());
     }
-    public static Integer StudentIdMaker(Integer branch,Integer classes){
+    public static Integer StudentIdMaker(Integer classes){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(((new Date()).toString().substring((new Date()).toString().length()-2)).trim());
         stringBuilder.append(classes.toString().trim());
