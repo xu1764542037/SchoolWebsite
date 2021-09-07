@@ -15,5 +15,4 @@ public interface ProfessionDaoInter{
     int update(@Param("profession") Profession profession);
     List<Profession> selectbyname(@Param("professionName") String professionName,@Param(value ="branch") Integer branch);
     List<Profession> selectbyid(@Param("professionId") Integer professionId);
-    List<Profession> select();
 }

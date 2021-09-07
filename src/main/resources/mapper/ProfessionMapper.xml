@@ -92,25 +92,13 @@
         from schoolwebsite.profession,
              schoolwebsite.branch
         where
-            profession.branch = branch.branchId and
-            profession.professionName like CONCAT('%',#{professionName})
+            profession.branch = branch.branchId
+            <if test="professionName!=null">
+                and profession.professionName like CONCAT('%',#{professionName})
+            </if>
             <if test="branch!=null">
                 and profession.branch = #{branch}
             </if>
-    </select>
-
-    <select id="select" resultMap="res">
-        select
-            profession.professionId,
-            profession.professionName,
-            profession.status,
-            profession.description,
-            branch.branchId,
-            branch.branchName
-        from schoolwebsite.profession,
-             schoolwebsite.branch
-        where
-            profession.branch = branch.branchId
     </select>
 
 </mapper>

@@ -100,29 +100,46 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     }
 
     @Override
-    public BackReturn select(String professionName){
+    public BackReturn select(String professionName,Integer branch){
         BackReturn backReturn = new BackReturn();
         List<Profession> professions;
         if (!"".equals(professionName)){
-            professions = professionDaoInter.selectbyname(professionName,null);
+            if (branch!=null&&branch!=0){
+                professions = professionDaoInter.selectbyname(professionName,branch);
+            }else{
+                professions = professionDaoInter.selectbyname(professionName,null);
+            }
             if (professions.size()>0){
                 backReturn.setMsg("已查询到符合要求的数据");
                 backReturn.setCode(1);
                 backReturn.setObj(professions);
             }else{
-                backReturn.setCode(-1);
-                backReturn.setMsg("系统出错或未查询到指定数据");
+                backReturn.setCode(0);
+                backReturn.setMsg("未查询到指定数据");
             }
         }else{
-            professions = professionDaoInter.select();
-            if (professions.size()>0){
-                backReturn.setMsg("已查询到数据");
-                backReturn.setCode(1);
-                backReturn.setObj(professions);
+            if (branch!=null&&branch!=0){
+                professions = professionDaoInter.selectbyname(null,branch);
+                if (professions.size()>0){
+                    backReturn.setMsg("已查询到符合要求的数据");
+                    backReturn.setCode(1);
+                    backReturn.setObj(professions);
+                }else{
+                    backReturn.setCode(0);
+                    backReturn.setMsg("未查询到指定数据");
+                }
             }else{
-                backReturn.setMsg("系统出错或数据被清空");
-                backReturn.setCode(-1);
+                professions = professionDaoInter.selectbyname(null,null);
+                if (professions.size()>0){
+                    backReturn.setMsg("已查询到数据");
+                    backReturn.setCode(1);
+                    backReturn.setObj(professions);
+                }else{
+                    backReturn.setMsg("系统出错或数据被清空");
+                    backReturn.setCode(-1);
+                }
             }
+
         }
         return backReturn;
     }

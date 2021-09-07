@@ -7,5 +7,5 @@ public interface ProfessionServiceInter {
     BackReturn add(Profession profession);
     BackReturn delete(Integer professionId);
     BackReturn update(Profession profession);
-    BackReturn select(String professionName);
+    BackReturn select(String professionName,Integer branch);
 }

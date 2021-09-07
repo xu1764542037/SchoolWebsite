@@ -37,7 +37,7 @@ public class ProfessionControllerImpl implements ProfessionControllerInter {
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(@RequestParam(value = "name",defaultValue = "",required = false) String professionName) {
-            return professionService.select(professionName);
+    public BackReturn select(@RequestParam(value = "name",defaultValue = "",required = false) String professionName,@RequestParam(value = "branch",defaultValue = "",required = false) Integer branch) {
+            return professionService.select(professionName,branch);
     }
 }
