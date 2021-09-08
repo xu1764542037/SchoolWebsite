@@ -1,14 +1,13 @@
 package com.example.schoolwebsite.service.impl;
 
-import com.example.schoolwebsite.dao.BranchDaoInter;
-import com.example.schoolwebsite.dao.ClassDaoInter;
-import com.example.schoolwebsite.dao.ProfessionDaoInter;
-import com.example.schoolwebsite.dao.StudentDaoInter;
+import com.example.schoolwebsite.dao.*;
 import com.example.schoolwebsite.entity.BackReturn;
 import com.example.schoolwebsite.entity.Class;
 import com.example.schoolwebsite.entity.Student;
+import com.example.schoolwebsite.entity.UserInfo;
 import com.example.schoolwebsite.service.inter.StudentServiceInter;
 import com.example.schoolwebsite.utils.IdMaker;
+import com.example.schoolwebsite.utils.MD5Class;
 import org.omg.CORBA.BAD_CONTEXT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +25,11 @@ public class StudentServiceImpl implements StudentServiceInter {
     private BranchDaoInter branchDaoInter;
     @Autowired
     private ClassDaoInter classDaoInter;
+    @Autowired
+    private UserInfoDaoInter userInfoDaoInter;
 
     @Override
     public BackReturn add(Student student) {
-        //增加方法需要Actor模块的CRUD
         BackReturn backReturn = new BackReturn();
         if (student!=null){
             if (student.getIdcardnumber()!=null
@@ -37,7 +37,10 @@ public class StudentServiceImpl implements StudentServiceInter {
                     &&student.getAge()!=null
                     &&student.getAge()>0
                     &&!"".equals(student.getSex())
-                    &&!"".equals(student.getStudentName())) {
+                    &&!"".equals(student.getStudentName())
+                    &&!"".equals(student.getIdcardnumber().getCode())) {
+                //身份证后6位密码
+                student.getIdcardnumber().setPassword(MD5Class.NewPassword(student.getIdcardnumber().getIdCardNumber().substring(student.getIdcardnumber().getIdCardNumber().length()-6)));
                 //分院判空
                 if (student.getBranch()!=null) {
                     if (student.getBranch().getId()==null){
@@ -62,7 +65,8 @@ public class StudentServiceImpl implements StudentServiceInter {
                         classDaoInter.selectbyid(student.getClasses().getId()).size()>0
                 ){
                     student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
-                    if (studentDaoInter.add(student)>=0) {
+                    
+                    if (studentDaoInter.add(student)>=0&&userInfoDaoInter.add(student.getIdcardnumber())>=0) {
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
                     }else {
@@ -75,7 +79,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                 }
             }else{
                 backReturn.setCode(0);
-                backReturn.setMsg("学生年龄，性别，身份证号均不能为空");
+                backReturn.setMsg("身份、年龄、性别、身份证号均不能为空");
             }
         }else{
             backReturn.setMsg("传入参数为空，添加失败");

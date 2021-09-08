@@ -2,6 +2,7 @@ package com.example.schoolwebsite.service.impl;
 
 import com.example.schoolwebsite.dao.BranchDaoInter;
 import com.example.schoolwebsite.dao.TeacherDaoInter;
+import com.example.schoolwebsite.dao.UserInfoDaoInter;
 import com.example.schoolwebsite.entity.BackReturn;
 import com.example.schoolwebsite.entity.Teacher;
 import com.example.schoolwebsite.service.inter.TeacherServiceInter;
@@ -18,51 +19,47 @@ public class TeacherServiceImpl implements TeacherServiceInter {
     private TeacherDaoInter teacherDaoInter;
     @Autowired
     private BranchDaoInter branchDaoInter;
+    @Autowired
+    private UserInfoDaoInter userInfoDaoInter;
 
     @Override
     public BackReturn add(Teacher teacher) {
         BackReturn backReturn = new BackReturn();
-        if (teacher.getIdcardnumber()!=null&&!"".equals(teacher.getIdcardnumber())){
-            if (teacher.getTeacherName()!=null&&!"".equals(teacher.getTeacherName())){
-                if (teacher.getSex()!=null&&!"".equals(teacher.getSex())){
-                    if (teacher.getBranch()!=null){
-                        if (teacher.getBranch().getId()!=null){
-                            if (branchDaoInter.selectbyid(teacher.getBranch().getId()).size()>0) {
-                                if (teacher.getSalary()!=null&&teacher.getSalary()!=0){
-                                    teacher.setId(IdMaker.TeacherIdMaker(teacher.getBranch().getId()));
-                                    if (teacherDaoInter.add(teacher)>=0) {
-                                        backReturn.setMsg("添加成功");
-                                        backReturn.setCode(1);
-                                    }else{
-                                        backReturn.setMsg("系统异常，添加失败");
-                                        backReturn.setCode(-1);
-                                    }
-                                }else{
-                                    backReturn.setMsg("教师基础薪资不能为空");
-                                    backReturn.setCode(0);
-                                }
-                            }else{
-                                backReturn.setMsg("分院不存在，无法添加");
-                                backReturn.setCode(0);
-                            }
-                        }else{
-                            backReturn.setMsg("分院信息无效");
-                            backReturn.setCode(0);
-                        }
+        //判空
+        if (teacher!=null){
+            //必要信息判空
+            if (    teacher.getIdcardnumber()!=null
+                    &&teacher.getBranch()!=null
+                    &&!"".equals(teacher.getSex())
+                    &&!"".equals(teacher.getTeacherName())
+                    &&!"".equals(teacher.getIdcardnumber().getIdCardNumber())
+                    &&teacher.getSalary()!=null
+                    &&teacher.getSalary()!=0
+                    &&teacher.getBranch().getId()!=null
+                    &&!"".equals(teacher.getIdcardnumber().getCode())){
+                //有效性判定
+                if (branchDaoInter.selectbyid(teacher.getBranch().getId()).size()>0
+                        &&userInfoDaoInter.selectbyid(teacher.getIdcardnumber().getIdCardNumber()).size()<=0){
+                    //必要数据写入
+                    teacher.setId(IdMaker.TeacherIdMaker(teacher.getBranch().getId()));
+                    teacher.getIdcardnumber().setPassword(teacher.getIdcardnumber().getIdCardNumber().substring(teacher.getIdcardnumber().getIdCardNumber().length()-6));
+                    if (teacherDaoInter.add(teacher)>=0&&userInfoDaoInter.add(teacher.getIdcardnumber())>=0){
+                        backReturn.setMsg("添加成功");
+                        backReturn.setCode(1);
                     }else{
-                        backReturn.setMsg("教师所属分院不能为空");
+                        backReturn.setMsg("系统异常，添加失败");
                         backReturn.setCode(0);
                     }
                 }else{
-                    backReturn.setMsg("教师性别不能为空");
+                    backReturn.setMsg("该用户已被注册或分院信息无效，确认后再试");
                     backReturn.setCode(0);
                 }
             }else{
-                backReturn.setMsg("教师姓名不能为空");
+                backReturn.setMsg("教师信息不全，无法添加");
                 backReturn.setCode(0);
             }
         }else{
-            backReturn.setMsg("教师身份证号不能为空");
+            backReturn.setMsg("传入数据为空，添加失败");
             backReturn.setCode(0);
         }
         return backReturn;

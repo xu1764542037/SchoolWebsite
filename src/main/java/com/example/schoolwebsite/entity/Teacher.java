@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 public class Teacher {
     private Integer id;
-    private String idcardnumber;
+    private UserInfo idcardnumber;
     private String teacherName;
     private String sex;
     private Branch branch;
