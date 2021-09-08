@@ -29,10 +29,11 @@ public class StudentServiceImpl implements StudentServiceInter {
 
     @Override
     public BackReturn add(Student student) {
+        //增加方法需要Actor模块的CRUD
         BackReturn backReturn = new BackReturn();
         if (student!=null){
             if (student.getIdcardnumber()!=null
-                    &&!"".equals(student.getIdcardnumber())
+                    &&!"".equals(student.getIdcardnumber().getIdCardNumber())
                     &&student.getAge()!=null
                     &&student.getAge()>0
                     &&!"".equals(student.getSex())

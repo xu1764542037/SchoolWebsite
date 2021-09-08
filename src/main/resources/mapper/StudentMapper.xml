@@ -4,16 +4,18 @@
 
     <resultMap id="res" type="com.example.schoolwebsite.entity.Student">
         <id property="id" jdbcType="INTEGER" javaType="java.lang.Integer" column="studentId"/>
-        <result property="idcardnumber" jdbcType="VARCHAR" javaType="java.lang.String" column="IdCardNumber"/>
         <result property="studentName" jdbcType="VARCHAR" javaType="java.lang.String" column="studentName"/>
         <result property="sex" jdbcType="VARCHAR" javaType="java.lang.String" column="studentSex"/>
         <result property="age" jdbcType="INTEGER" javaType="java.lang.Integer" column="studentAge"/>
         <result property="tel" jdbcType="VARCHAR" javaType="java.lang.String" column="studentTel"/>
-        <result property="tel" jdbcType="VARCHAR" javaType="java.lang.String" column="studentTel"/>
         <result property="qq" jdbcType="VARCHAR" javaType="java.lang.String" column="studentQQ"/>
         <result property="address" jdbcType="VARCHAR" javaType="java.lang.String" column="studentAddress"/>
+        <result property="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" column="createTime"/>
         <result property="status" jdbcType="VARCHAR" javaType="java.lang.String" column="status"/>
         <result property="description" jdbcType="VARCHAR" javaType="java.lang.String" column="description"/>
+        <association property="idcardnumber" javaType="com.example.schoolwebsite.entity.UserInfo">
+            <id property="idCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" column="IdCardNumber"/>
+        </association>
         <association property="profession" javaType="com.example.schoolwebsite.entity.Profession">
             <id property="id" jdbcType="INTEGER" javaType="java.lang.Integer" column="professionId"/>
             <result property="professionName" jdbcType="VARCHAR" javaType="java.lang.String" column="professionName"/>
@@ -59,7 +61,7 @@
         </trim>
             VALUE
         <trim>
-            (#{student.id}
+            (#{student.id,jdbcType=VARCHAR}
             ,#{student.idcardnumber}
             ,#{student.studentName}
             ,#{student.sex}
@@ -141,7 +143,7 @@
     </update>
 
     <select id="selectbyname" resultMap="res">
-        select student.studentId        , student.IdCardNumber
+        select student.studentId        , userInfo.IdCardNumber
              , student.studentName      , student.studentSex
              , student.studentAge       , student.studentProfession
              , student.studentBranch    , student.studentClass
@@ -153,9 +155,12 @@
              , branch.branchId          , branch.branchName
         from   schoolwebsite.student    ,schoolwebsite.profession
              , schoolwebsite.class      ,schoolwebsite.branch
-            where schoolwebsite.student.studentBranch = schoolwebsite.branch.branchId
+             , schoolwebsite.userInfo
+        where
+                schoolwebsite.student.studentBranch = schoolwebsite.branch.branchId
             and schoolwebsite.student.studentClass = schoolwebsite.class.classId
             and schoolwebsite.student.studentProfession = schoolwebsite.profession.professionId
+            and schoolwebsite.student.IdCardNumber = schoolwebsite.userInfo.IdCardNumber
             <if test="studentName!=null">
             and schoolwebsite.student.studentName like CONCAT(#{studentName},'%')
             </if>
@@ -163,12 +168,12 @@
             and schoolwebsite.student.studentBranch = #{branch}
             </if>
             <if test="Class!=null">
-                and schoolwebsite.class.className like CONCAT(#{Class},'%')
+            and schoolwebsite.class.className like CONCAT(#{Class},'%')
             </if>
     </select>
 
     <select id="selectbyid" resultMap="res">
-        select student.studentId        , student.IdCardNumber
+        select student.studentId        , userInfo.IdCardNumber
              , student.studentName      , student.studentSex
              , student.studentAge       , student.studentProfession
              , student.studentBranch    , student.studentClass
@@ -180,11 +185,13 @@
              , branch.branchId          , branch.branchName
         from   schoolwebsite.student    ,schoolwebsite.profession
            , schoolwebsite.class      ,schoolwebsite.branch
+            , schoolwebsite.userInfo
         where schoolwebsite.student.studentBranch = schoolwebsite.branch.branchId
           and schoolwebsite.student.studentClass = schoolwebsite.class.classId
           and schoolwebsite.student.studentProfession = schoolwebsite.profession.professionId
+          and schoolwebsite.student.IdCardNumber = schoolwebsite.userInfo.IdCardNumber
         <if test="IdCardNumber!=null">
-            and student.IdCardNumber = #{IdCardNumber}
+            and userInfo.IdCardNumber = #{IdCardNumber}
         </if>
         <if test="studentId!=null">
             and student.studentId = #{studentId}
