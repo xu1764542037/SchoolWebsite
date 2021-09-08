@@ -62,7 +62,7 @@
             VALUE
         <trim>
             (#{student.id,jdbcType=VARCHAR}
-            ,#{student.idcardnumber}
+            ,#{student.idcardnumber.idCardNumber}
             ,#{student.studentName}
             ,#{student.sex}
             ,#{student.age}
@@ -138,7 +138,9 @@
         </trim>
             where studentId = #{student.id}
         <if test="student.idcardnumber!=null">
-            and IdCardNumber = #{student.idcardnumber}
+              <if test="student.idcardnumber.idCardNumber!=null">
+                and IdCardNumber = like #{student.idcardnumber.idCardNUmber}
+              </if>
         </if>
     </update>
 
@@ -184,14 +186,16 @@
              , class.classId            , class.className
              , branch.branchId          , branch.branchName
         from   schoolwebsite.student    ,schoolwebsite.profession
-           , schoolwebsite.class      ,schoolwebsite.branch
+            , schoolwebsite.class       ,schoolwebsite.branch
             , schoolwebsite.userInfo
         where schoolwebsite.student.studentBranch = schoolwebsite.branch.branchId
           and schoolwebsite.student.studentClass = schoolwebsite.class.classId
           and schoolwebsite.student.studentProfession = schoolwebsite.profession.professionId
           and schoolwebsite.student.IdCardNumber = schoolwebsite.userInfo.IdCardNumber
-        <if test="IdCardNumber!=null">
-            and userInfo.IdCardNumber = #{IdCardNumber}
+        <if test="student.idcardnumber!=null">
+            <if test="student.idcardnumber.idCardNumber!=null">
+                and userInfo.IdCardNumber like #{student.idcardnumber.idCardNUmber}
+            </if>
         </if>
         <if test="studentId!=null">
             and student.studentId = #{studentId}

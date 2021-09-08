@@ -3,13 +3,15 @@
 <mapper namespace="com.example.schoolwebsite.dao.TeacherDaoInter">
     <resultMap id="res" type="com.example.schoolwebsite.entity.Teacher">
         <id column="teacherId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
-        <result column="IdCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" property="idcardnumber"/>
         <result column="teacherName" jdbcType="VARCHAR" javaType="java.lang.String" property="teacherName"/>
         <result column="teacherSex" jdbcType="VARCHAR" javaType="java.lang.String" property="sex"/>
         <result column="teacherLevel" jdbcType="VARCHAR" javaType="java.lang.String" property="level"/>
         <result column="teacherSalary" jdbcType="INTEGER" javaType="java.lang.Integer" property="salary"/>
         <result column="status" jdbcType="VARCHAR" javaType="java.lang.String" property="status"/>
         <result column="description" jdbcType="VARCHAR" javaType="java.lang.String" property="description"/>
+        <association property="idcardnumber" javaType="com.example.schoolwebsite.entity.UserInfo">
+            <id property="idCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" column="IdCardNumber"/>
+        </association>
         <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
             <id column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
             <result column="branchName" jdbcType="VARCHAR" javaType="java.lang.String" property="branchName"/>
@@ -40,8 +42,8 @@
         </trim>
         VALUE
         <trim prefixOverrides=",">
-            (#{teacher.id}
-            ,#{teacher.idcardnumber}
+            (#{teacher.id,jdbcType=VARCHAR}
+            ,#{teacher.idcardnumber.idCardNumber}
             ,#{teacher.teacherName}
             ,#{teacher.sex}
             ,#{teacher.branch.id}
@@ -99,7 +101,7 @@
 
     <select id="selectbyname" resultMap="res">
         select teacher.teacherId
-             , teacher.IdCardNumber
+             , userInfo.IdCardNumber
              , teacher.teacherName
              , teacher.teacherSex
              , teacher.branch
@@ -112,12 +114,15 @@
              , branch.branchName
             from
              schoolwebsite.teacher,
-             schoolwebsite.branch
+             schoolwebsite.branch,
+             schoolwebsite.userInfo
             where
              teacher.branch = branch.branchId
-            <if test="teacherName!=null">
-            and teacher.teacherName like CONCAT(#{teacherName},'%')
+        <if test="teacher.idcardnumber!=null">
+            <if test="teacher.idcardnumber.idCardNumber!=null">
+                and userInfo.IdCardNumber like #{teacher.idcardnumber.idCardNUmber}
             </if>
+        </if>
             <if test="branch!=null">
             and teacher.branch = #{branch}
             </if>
@@ -138,11 +143,15 @@
         , branch.branchName
         from
         schoolwebsite.teacher,
-        schoolwebsite.branch
+        schoolwebsite.branch,
+        schoolwebsite.userInfo
         where
         teacher.branch = branch.branchId
-        <if test="IdCardNumber!=null">
-            and teacher.IdCardNumber = #{IdCardNumber}
+        and teacher.IdCardNumber = userInfo.IdCardNumber
+        <if test="teacher.idcardnumber!=null">
+            <if test="teacher.idcardnumber.idCardNumber!=null">
+                and userInfo.IdCardNumber like #{teacher.idcardnumber.idCardNUmber}
+            </if>
         </if>
         <if test="teacherId!=null">
             and teacher.teacherId = #{teacherId}
