@@ -5,7 +5,7 @@ import com.example.schoolwebsite.entity.Student;
 
 public interface StudentServiceInter {
     BackReturn add(Student student);
-    BackReturn delete(Integer studentId,String IdCardNumber);
+    BackReturn delete(String IdCardNumber);
     BackReturn update(Student student);
     BackReturn select(String studentname,Integer branch,String Class);
 }

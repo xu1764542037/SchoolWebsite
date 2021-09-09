@@ -25,8 +25,8 @@ public class TeacherControllerImpl implements TeacherControllerInter {
 
     @Override
     @GetMapping("/delete")
-    public BackReturn delete(@RequestParam(value = "id") Integer teacherId,@RequestParam(value = "cardId")  String IdCardNumber) {
-        return teacherService.delete(teacherId,IdCardNumber);
+    public BackReturn delete(@RequestParam(value = "id")  String IdCardNumber) {
+        return teacherService.delete(IdCardNumber);
     }
 
     @Override

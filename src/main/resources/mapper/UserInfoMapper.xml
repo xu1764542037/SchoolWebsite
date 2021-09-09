@@ -7,7 +7,7 @@
     </insert>
 
     <delete id="delete">
-        delete from schoolwebsite.userInfo where IdCardNumber = #{userInfoId}
+        delete from schoolwebsite.userInfo where IdCardNumber like #{userInfoId}
     </delete>
 
     <update id="update">
@@ -24,7 +24,14 @@
     </update>
 
     <select id="selectbyid" resultType="com.example.schoolwebsite.entity.UserInfo">
-        select * from schoolwebsite.userInfo where IdCardNumber like #{userInfoId}
+        select * from schoolwebsite.userInfo
+        <where>
+            <if test="userInfoId!=null">
+                IdCardNumber like #{userInfoId}
+            and password like #{password}
+            </if>
+        </where>
+
     </select>
 
 </mapper>

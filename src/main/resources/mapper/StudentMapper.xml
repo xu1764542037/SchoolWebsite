@@ -89,10 +89,6 @@
         </trim>
     </insert>
 
-    <delete id="delete">
-        delete from schoolwebsite.student where student.studentId = #{studentId}
-    </delete>
-
     <update id="update">
         update schoolwebsite.student set
         <trim prefixOverrides=",">

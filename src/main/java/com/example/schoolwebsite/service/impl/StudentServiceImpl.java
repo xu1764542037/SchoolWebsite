@@ -62,7 +62,8 @@ public class StudentServiceImpl implements StudentServiceInter {
                 if (//验证分院、专业、班级信息有效性
                         professionDaoInter.selectbyid(student.getProfession().getId()).size()>0&&
                         branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
-                        classDaoInter.selectbyid(student.getClasses().getId()).size()>0
+                        classDaoInter.selectbyid(student.getClasses().getId()).size()>0&&
+                        userInfoDaoInter.selectbyid(student.getIdcardnumber().getIdCardNumber(),null).size()<=0
                 ){
                     student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
                     
@@ -74,7 +75,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                         backReturn.setCode(-1);
                     }
                 }else{
-                    backReturn.setMsg("添加失败，分院、专业或班级信息无效，请核验后重新添加");
+                    backReturn.setMsg("添加失败，分院、专业、班级信息无效或该身份证已被注册，请核验后重新添加");
                     backReturn.setCode(0);
                 }
             }else{
@@ -90,11 +91,11 @@ public class StudentServiceImpl implements StudentServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer studentId, String IdCardNumber) {
+    public BackReturn delete(String IdCardNumber) {
         BackReturn backReturn = new BackReturn();
-        if (studentId != null && !"".equals(IdCardNumber) &&studentId!=0){
+        if (!"".equals(IdCardNumber)){
             if (studentDaoInter.selectbyid(IdCardNumber,null).size()>0) {
-                if (studentDaoInter.delete(studentId)>=0) {
+                if (userInfoDaoInter.delete(IdCardNumber)>=0) {
                     backReturn.setMsg("删除成功");
                     backReturn.setCode(1);
                 }else{

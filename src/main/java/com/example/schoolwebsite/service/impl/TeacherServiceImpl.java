@@ -39,7 +39,7 @@ public class TeacherServiceImpl implements TeacherServiceInter {
                     &&!"".equals(teacher.getIdcardnumber().getCode())){
                 //有效性判定
                 if (branchDaoInter.selectbyid(teacher.getBranch().getId()).size()>0
-                        &&userInfoDaoInter.selectbyid(teacher.getIdcardnumber().getIdCardNumber()).size()<=0){
+                        &&userInfoDaoInter.selectbyid(teacher.getIdcardnumber().getIdCardNumber(),null).size()<=0){
                     //必要数据写入
                     teacher.setId(IdMaker.TeacherIdMaker(teacher.getBranch().getId()));
                     teacher.getIdcardnumber().setPassword(teacher.getIdcardnumber().getIdCardNumber().substring(teacher.getIdcardnumber().getIdCardNumber().length()-6));
@@ -66,10 +66,10 @@ public class TeacherServiceImpl implements TeacherServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer teacherId,String idCardNumber) {
+    public BackReturn delete(String idCardNumber) {
         BackReturn backReturn = new BackReturn();
         if (teacherDaoInter.selectbyid(idCardNumber,null).size()>0){
-            if (teacherDaoInter.delete(teacherId)>=0) {
+            if (userInfoDaoInter.delete(idCardNumber)>=0) {
                 backReturn.setMsg("删除成功");
                 backReturn.setCode(0);
             }else{

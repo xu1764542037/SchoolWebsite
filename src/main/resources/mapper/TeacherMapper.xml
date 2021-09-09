@@ -62,10 +62,6 @@
         </trim>
     </insert>
 
-    <delete id="delete">
-        delete from schoolwebsite.teacher where teacherId = #{teacherId}
-    </delete>
-
     <update id="update">
         update schoolwebsite.teacher set
         <trim suffixOverrides=",">
