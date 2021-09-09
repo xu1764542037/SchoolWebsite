@@ -27,7 +27,7 @@ public class CourseServiceImpl implements CourseServiceInter {
                 return backReturn;
             }
             course.setId(IdMaker.CourseIdMaker());
-            if (courseDaoInter.add(course)>=0) {
+            if (courseDaoInter.add(course)) {
                 backReturn.setMsg("添加成功");
                 backReturn.setCode(1);
             }else{
@@ -46,7 +46,7 @@ public class CourseServiceImpl implements CourseServiceInter {
         BackReturn backReturn = new BackReturn();
         if (courseId!=null&&courseId!=0){
             if (courseDaoInter.selectbyid(courseId).size()>0){
-                if (courseDaoInter.delete(courseId)>=0) {
+                if (courseDaoInter.delete(courseId)) {
                     backReturn.setCode(1);
                     backReturn.setMsg("删除成功");
                 }else{
@@ -69,7 +69,7 @@ public class CourseServiceImpl implements CourseServiceInter {
         BackReturn backReturn = new BackReturn();
         if (course.getId()!=null&&course.getId()!=0&&course.getCourseName()!=null&&!"".equals(course.getCourseName())){
             if (courseDaoInter.selectbyid(course.getId()).size()>0) {
-                if (courseDaoInter.update(course)>=0) {
+                if (courseDaoInter.update(course)) {
                     backReturn.setMsg("修改成功");
                     backReturn.setCode(1);
                 }else{

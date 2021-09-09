@@ -39,7 +39,7 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
                         return backReturn;
                     }
                     profession.setId(IdMaker.ProfessionIdMaker());
-                    if (professionDaoInter.add(profession)>=0) {
+                    if (professionDaoInter.add(profession)) {
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
                     }else{
@@ -66,7 +66,7 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
             backReturn.setCode(0);
         }else{
             if (professionDaoInter.selectbyid(professionId).size()>0) {
-                if (professionDaoInter.delete(professionId)>=0) {
+                if (professionDaoInter.delete(professionId)) {
                     backReturn.setMsg("删除成功");
                     backReturn.setCode(1);
                 }else{
@@ -85,7 +85,7 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     public BackReturn update(Profession profession){
         BackReturn backReturn = new BackReturn();
         if (professionDaoInter.selectbyid(profession.getId()).size()>0) {
-            if (professionDaoInter.update(profession)>=0) {
+            if (professionDaoInter.update(profession)) {
                 backReturn.setMsg("修改成功");
                 backReturn.setCode(1);
             }else{

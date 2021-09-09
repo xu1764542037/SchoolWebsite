@@ -12,9 +12,9 @@ import java.util.List;
 @Component
 @Mapper
 public interface ClassDaoInter{
-    int add(@Param("classes") Class classes);
-    int delete(@Param("classId") Integer classId);
-    int update(@Param("classes") Class classes);
+    Boolean add(@Param("classes") Class classes);
+    Boolean delete(@Param("classId") Integer classId);
+    Boolean update(@Param("classes") Class classes);
     List<Class> selectbyname(@Param("className") String className,@Param("profession") Integer profession);
     List<Class> selectbyid(@Param("classId") Integer classId);
     List<Class> select();

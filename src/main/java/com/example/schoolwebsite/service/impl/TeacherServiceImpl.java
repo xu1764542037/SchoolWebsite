@@ -43,7 +43,7 @@ public class TeacherServiceImpl implements TeacherServiceInter {
                     //必要数据写入
                     teacher.setId(IdMaker.TeacherIdMaker(teacher.getBranch().getId()));
                     teacher.getIdcardnumber().setPassword(teacher.getIdcardnumber().getIdCardNumber().substring(teacher.getIdcardnumber().getIdCardNumber().length()-6));
-                    if (teacherDaoInter.add(teacher)>=0&&userInfoDaoInter.add(teacher.getIdcardnumber())>=0){
+                    if (teacherDaoInter.add(teacher)&&userInfoDaoInter.add(teacher.getIdcardnumber())){
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
                     }else{
@@ -69,7 +69,7 @@ public class TeacherServiceImpl implements TeacherServiceInter {
     public BackReturn delete(String idCardNumber) {
         BackReturn backReturn = new BackReturn();
         if (teacherDaoInter.selectbyid(idCardNumber,null).size()>0){
-            if (userInfoDaoInter.delete(idCardNumber)>=0) {
+            if (userInfoDaoInter.delete(idCardNumber)) {
                 backReturn.setMsg("删除成功");
                 backReturn.setCode(0);
             }else{
@@ -93,7 +93,7 @@ public class TeacherServiceImpl implements TeacherServiceInter {
                         teacher.setBranch(null);
                     }
                 }
-                if (teacherDaoInter.update(teacher)>=0) {
+                if (teacherDaoInter.update(teacher)) {
                     backReturn.setMsg("修改成功");
                     backReturn.setCode(1);
                 }else{

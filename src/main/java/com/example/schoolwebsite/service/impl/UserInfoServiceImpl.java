@@ -20,7 +20,7 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
         BackReturn backReturn = new BackReturn();
         if (!"".equals(IdCardNumber)){
             if (userInfoDaoInter.selectbyid(IdCardNumber,null).size()>0){
-                if (userInfoDaoInter.delete(IdCardNumber)>=0){
+                if (userInfoDaoInter.delete(IdCardNumber)){
                     backReturn.setCode(1);
                     backReturn.setMsg("删除成功");
                 }else{
@@ -47,7 +47,7 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
                 backReturn.setMsg("无修改信息，修改成功");
                 backReturn.setCode(1);
             }else {
-                if (userInfoDaoInter.update(userInfo)>=0) {
+                if (userInfoDaoInter.update(userInfo)) {
                     backReturn.setMsg("修改成功");
                     backReturn.setCode(1);
                 }else{

@@ -11,8 +11,8 @@ import java.util.List;
 @Component
 @Mapper
 public interface TeacherDaoInter{
-    int add(@Param("teacher") Teacher teacher);
-    int update(@Param("teacher") Teacher teacher);
+    Boolean add(@Param("teacher") Teacher teacher);
+    Boolean update(@Param("teacher") Teacher teacher);
     List<Teacher> selectbyname(@Param("teacherName") String teacherName, @Param("branch") Integer branch);
     List<Teacher> selectbyid(@Param("IdCardNumber") String IdCardNumber,@Param("teacherId") Integer teacherId);
 }

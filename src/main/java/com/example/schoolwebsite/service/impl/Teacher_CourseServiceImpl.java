@@ -49,7 +49,7 @@ public class Teacher_CourseServiceImpl implements Teacher_CourseServiceInter {
             }
             //执行添加
             teacher_course.setId(IdMaker.Teacher_CourseIdMaker());
-            if (teacher_courseDaoInter.add(teacher_course)>=0){
+            if (teacher_courseDaoInter.add(teacher_course)){
                 backReturn.setMsg("添加成功");
                 backReturn.setCode(1);
             }else{
@@ -69,7 +69,7 @@ public class Teacher_CourseServiceImpl implements Teacher_CourseServiceInter {
         BackReturn backReturn = new BackReturn();
         if (teacher_courseId!=null&&teacher_courseId!=0){
             if (teacher_courseDaoInter.selectbyid(teacher_courseId).size()>0) {
-                if (teacher_courseDaoInter.delete(teacher_courseId)>=0) {
+                if (teacher_courseDaoInter.delete(teacher_courseId)) {
                     backReturn.setMsg("删除成功");
                     backReturn.setCode(1);
                 }else{
@@ -112,7 +112,7 @@ public class Teacher_CourseServiceImpl implements Teacher_CourseServiceInter {
                 }
             }
             //修改数据
-            if (teacher_courseDaoInter.update(teacher_course)>=0){
+            if (teacher_courseDaoInter.update(teacher_course)){
                 backReturn.setMsg("修改成功");
                 backReturn.setCode(1);
             }else{

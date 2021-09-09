@@ -30,7 +30,7 @@ public class BranchServiceImpl implements BranchServiceInter {
             }
             if (!"".equals(branch.getBranchName())){
                 branch.setId(IdMaker.BranchIdMaker());
-                if (branchDaoInter.add(branch)>=0){
+                if (branchDaoInter.add(branch)){
                     backReturn.setMsg("添加成功");
                     backReturn.setCode(1);
                 }else{
@@ -57,7 +57,7 @@ public class BranchServiceImpl implements BranchServiceInter {
                 backReturn.setCode(0);
                 return backReturn;
             }
-            if (branchDaoInter.delete(branchId)>=0) {
+            if (branchDaoInter.delete(branchId)) {
                 backReturn.setMsg("删除成功");
                 backReturn.setCode(1);
             }else {
@@ -77,7 +77,7 @@ public class BranchServiceImpl implements BranchServiceInter {
                 backReturn.setCode(0);
                 return backReturn;
             }else {
-                if (branchDaoInter.Update(branch)>=1) {
+                if (branchDaoInter.Update(branch)) {
                     backReturn.setMsg("修改成功");
                     backReturn.setCode(1);
                 }else{
@@ -88,7 +88,7 @@ public class BranchServiceImpl implements BranchServiceInter {
             }
         }else{
             branch.setId(IdMaker.BranchIdMaker());
-            if (branchDaoInter.add(branch)>=0){
+            if (branchDaoInter.add(branch)){
                 backReturn.setMsg("该分院不存在，已为您添加分院数据");
                 backReturn.setCode(0);
             }else{

@@ -67,7 +67,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                 ){
                     student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
                     
-                    if (studentDaoInter.add(student)>=0&&userInfoDaoInter.add(student.getIdcardnumber())>=0) {
+                    if (studentDaoInter.add(student)&&userInfoDaoInter.add(student.getIdcardnumber())) {
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
                     }else {
@@ -95,7 +95,7 @@ public class StudentServiceImpl implements StudentServiceInter {
         BackReturn backReturn = new BackReturn();
         if (!"".equals(IdCardNumber)){
             if (studentDaoInter.selectbyid(IdCardNumber,null).size()>0) {
-                if (userInfoDaoInter.delete(IdCardNumber)>=0) {
+                if (userInfoDaoInter.delete(IdCardNumber)) {
                     backReturn.setMsg("删除成功");
                     backReturn.setCode(1);
                 }else{
@@ -137,7 +137,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                             branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
                             classDaoInter.selectbyid(student.getClasses().getId()).size()>0
             ){
-                if (studentDaoInter.update(student)>=0) {
+                if (studentDaoInter.update(student)) {
                     backReturn.setMsg("修改成功");
                     backReturn.setCode(0);
                 }else{

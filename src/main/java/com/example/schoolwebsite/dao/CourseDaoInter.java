@@ -11,9 +11,9 @@ import java.util.List;
 @Component
 @Mapper
 public interface CourseDaoInter{
-    int add(@Param("course") Course course);
-    int delete(@Param("courseId") Integer courseId);
-    int update(@Param("course") Course course);
+    Boolean add(@Param("course") Course course);
+    Boolean delete(@Param("courseId") Integer courseId);
+    Boolean update(@Param("course") Course course);
     List<Course> selectbyname(@Param("courseName") String courseName);
     List<Course> selectbyid(@Param("courseId") Integer courseId);
     List<Course> select();

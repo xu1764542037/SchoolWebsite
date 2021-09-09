@@ -44,7 +44,7 @@ public class ClassServiceImpl implements ClassServiceInter {
                             backReturn.setCode(0);
                             return backReturn;
                         }
-                        if (classDaoInter.add(classes)>=0) {
+                        if (classDaoInter.add(classes)) {
                             backReturn.setMsg("添加成功");
                             backReturn.setCode(1);
                         }else{
@@ -75,7 +75,7 @@ public class ClassServiceImpl implements ClassServiceInter {
         BackReturn backReturn = new BackReturn();
         if (classId!=null&&classId!=0){
             if (classDaoInter.selectbyid(classId).size()>0){
-                if (classDaoInter.delete(classId)>=0) {
+                if (classDaoInter.delete(classId)) {
                     backReturn.setMsg("删除成功");
                     backReturn.setCode(1);
                 }else{
@@ -102,7 +102,7 @@ public class ClassServiceImpl implements ClassServiceInter {
                     if (classes.getClassName()!=null&&!"".equals(classes.getClassName())){
                         classes.setClassName(CheckClassName(classes.getClassName()).getMsg());
                     }
-                    if (classDaoInter.update(classes)>=0) {
+                    if (classDaoInter.update(classes)) {
                         backReturn.setMsg("修改成功");
                         backReturn.setCode(1);
                     }else{

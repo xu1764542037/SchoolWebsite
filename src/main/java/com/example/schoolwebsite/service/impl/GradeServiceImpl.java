@@ -32,7 +32,7 @@ public class GradeServiceImpl implements GradeServiceInter {
                         courseDaoInter.selectbyid(grade.getCourse().getId()).size()>0
                 ){
                     grade.setId(IdMaker.GradeIdMaker());
-                    if (gradeDaoInter.add(grade)>=0) {
+                    if (gradeDaoInter.add(grade)) {
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
                     }else{
@@ -59,7 +59,7 @@ public class GradeServiceImpl implements GradeServiceInter {
         BackReturn backReturn = new BackReturn();
         if (gradeId!=null&&gradeId!=0){
             if (gradeDaoInter.selectbyid(gradeId).size()>0) {
-                if (gradeDaoInter.delete(gradeId)>=0) {
+                if (gradeDaoInter.delete(gradeId)) {
                     backReturn.setMsg("删除成功");
                     backReturn.setCode(1);
                 }else{
@@ -104,7 +104,7 @@ public class GradeServiceImpl implements GradeServiceInter {
                         }
                     }
                 }
-                if (gradeDaoInter.update(grade)>=0) {
+                if (gradeDaoInter.update(grade)) {
                     backReturn.setMsg("修改成功");
                     backReturn.setCode(1);
                 }else{
