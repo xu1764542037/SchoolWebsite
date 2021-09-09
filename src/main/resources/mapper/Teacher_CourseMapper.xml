@@ -17,7 +17,7 @@
     </resultMap>
 
     <insert id="add">
-        insert into schoolwebsite.`teacher-course`
+        replace into schoolwebsite.`teacher-course`
             <trim>
                 (id
                 ,teacherid
@@ -74,12 +74,8 @@
                 where Id = #{teacher_course.id}
     </update>
 
-    <select id="selectbyid" resultMap="res">
-        select `teacher-course`.Id
-             ,`teacher-course`.teacherId
-             ,`teacher-course`.courseId
-             ,`teacher-course`.status
-             ,`teacher-course`.description
+    <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Teacher_Course">
+        select `teacher-course`.*
              ,teacher.teacherId
              ,teacher.teacherName
              ,course.courseId
@@ -94,12 +90,8 @@
             `teacher-course`.Id = #{teacher_courseId.id}
     </select>
 
-    <select id="selectbyname" resultMap="res">
-        select `teacher-course`.Id
-             ,`teacher-course`.teacherId
-             ,`teacher-course`.courseId
-             ,`teacher-course`.status
-             ,`teacher-course`.description
+    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Teacher_Course">
+        select `teacher-course`.*
              ,teacher.teacherId
              ,teacher.teacherName
              ,course.courseId

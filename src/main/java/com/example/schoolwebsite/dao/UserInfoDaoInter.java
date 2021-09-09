@@ -10,7 +10,6 @@ import java.util.List;
 @Component
 @Mapper
 public interface UserInfoDaoInter {
-    Boolean add(@Param("userInfo") UserInfo userInfo);
     Boolean delete(@Param("userInfoId") String userInfoId);
     Boolean update(@Param("userInfo") UserInfo userInfo);
     List<UserInfo> selectbyid(@Param("userInfoId") String userInfoId,@Param("password") String password);

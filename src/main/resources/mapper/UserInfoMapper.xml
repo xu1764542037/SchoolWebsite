@@ -2,10 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.UserInfoDaoInter">
 
-    <insert id="add">
-        insert into schoolwebsite.userInfo (idcardnumber, password,dir_code) VALUE (#{userInfo.idCardNumber},#{userInfo.password},#{userInfo.code})
-    </insert>
-
     <delete id="delete">
         delete from schoolwebsite.userInfo where IdCardNumber like #{userInfoId}
     </delete>

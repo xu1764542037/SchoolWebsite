@@ -3,7 +3,7 @@
 <mapper namespace="com.example.schoolwebsite.dao.CourseDaoInter">
 
     <insert id="add">
-        insert into schoolwebsite.course
+        replace into schoolwebsite.course
         <trim>
             (courseId
             ,courseName
@@ -50,15 +50,15 @@
     </update>
 
     <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Course">
-        select courseId, courseName, status, description from schoolwebsite.course where courseName like CONCAT('%',#{courseName})
+        select * from schoolwebsite.course where courseName like CONCAT('%',#{courseName})
     </select>
 
     <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Course">
-        select courseId, courseName, status, description from schoolwebsite.course where courseId = #{courseId}
+        select * from schoolwebsite.course where courseId = #{courseId}
     </select>
 
     <select id="select" resultType="com.example.schoolwebsite.entity.Course">
-        select courseId, courseName, status, description from schoolwebsite.course
+        select * from schoolwebsite.course
     </select>
 
 </mapper>

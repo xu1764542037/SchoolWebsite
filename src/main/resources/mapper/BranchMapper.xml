@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.BranchDaoInter">
     <insert id="add">
-        insert into schoolwebsite.branch
+        replace into schoolwebsite.branch
             <trim>
             (branchId
             ,branchName
@@ -46,15 +46,15 @@
     </update>
 
     <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Branch">
-        select branchId,branchName,status,description from schoolwebsite.branch where branchName like concat('%',#{branchName},'%')
+        select * from schoolwebsite.branch where branchName like concat('%',#{branchName},'%')
     </select>
 
     <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Branch">
-        select branchId,branchName,status,description from schoolwebsite.branch where branchId = #{branchId}
+        select * from schoolwebsite.branch where branchId = #{branchId}
     </select>
 
     <select id="select" resultType="com.example.schoolwebsite.entity.Branch">
-        select branchId,branchName,status,description from schoolwebsite.branch
+        select * from schoolwebsite.branch
     </select>
 
 </mapper>

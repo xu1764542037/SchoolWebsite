@@ -11,6 +11,7 @@ public class Teacher_Course{
     private Integer id;
     private Teacher teacher;
     private Course course;
+    private Date createTime;
     private String status;
     private String description;
 }

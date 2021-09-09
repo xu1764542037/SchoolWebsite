@@ -11,7 +11,7 @@
     </resultMap>
 
     <insert id="add">
-        insert into schoolwebsite.profession
+        replace into schoolwebsite.profession
         <trim>
             (professionId
             ,professionName
@@ -66,12 +66,9 @@
         where professionId = #{profession.id}
     </update>
 
-    <select id="selectbyid" resultMap="res">
+    <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Profession">
         select
-               profession.professionId,
-               profession.professionName,
-               profession.status,
-               profession.description,
+               profession.*,
                branch.branchId,
                branch.branchName
         from schoolwebsite.profession,
@@ -81,12 +78,9 @@
               profession.professionId = #{professionId}
     </select>
 
-    <select id="selectbyname" resultMap="res">
+    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Profession">
         select
-            profession.professionId,
-            profession.professionName,
-            profession.status,
-            profession.description,
+            profession.*,
             branch.branchId,
             branch.branchName
         from schoolwebsite.profession,

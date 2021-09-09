@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.TeacherDaoInter">
-    <resultMap id="res" type="com.example.schoolwebsite.entity.Teacher">
-        <id column="teacherId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
-        <result column="teacherName" jdbcType="VARCHAR" javaType="java.lang.String" property="teacherName"/>
-        <result column="teacherSex" jdbcType="VARCHAR" javaType="java.lang.String" property="sex"/>
-        <result column="teacherLevel" jdbcType="VARCHAR" javaType="java.lang.String" property="level"/>
-        <result column="teacherSalary" jdbcType="INTEGER" javaType="java.lang.Integer" property="salary"/>
-        <result column="status" jdbcType="VARCHAR" javaType="java.lang.String" property="status"/>
-        <result column="description" jdbcType="VARCHAR" javaType="java.lang.String" property="description"/>
-        <association property="idcardnumber" javaType="com.example.schoolwebsite.entity.UserInfo">
-            <id property="idCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" column="IdCardNumber"/>
-        </association>
-        <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
-            <id column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
-            <result column="branchName" jdbcType="VARCHAR" javaType="java.lang.String" property="branchName"/>
-        </association>
-    </resultMap>
-
 
     <insert id="add">
-        insert into schoolwebsite.teacher
+        replace into schoolwebsite.userInfo
+            (idcardnumber, password,dir_code)
+            VALUE
+            (#{teacher.idcardnumber.idCardNumber},#{teacher.idcardnumber.password},#{teacher.idcardnumber.code});
+
+        replace into schoolwebsite.teacher
         <trim>
             (teacherId
             ,IdCardNumber
@@ -58,7 +46,7 @@
             ,#{teacher.description}
             </if>
             ,#{teacher.salary}
-            )
+            );
         </trim>
     </insert>
 
@@ -95,7 +83,7 @@
         </if>
     </update>
 
-    <select id="selectbyname" resultMap="res">
+    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Teacher">
         select teacher.teacherId
              , userInfo.IdCardNumber
              , teacher.teacherName
@@ -124,7 +112,7 @@
             </if>
     </select>
 
-    <select id="selectbyid" resultMap="res">
+    <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Teacher">
         select teacher.teacherId
         , teacher.IdCardNumber
         , teacher.teacherName

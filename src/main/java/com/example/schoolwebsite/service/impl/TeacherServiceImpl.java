@@ -43,7 +43,7 @@ public class TeacherServiceImpl implements TeacherServiceInter {
                     //必要数据写入
                     teacher.setId(IdMaker.TeacherIdMaker(teacher.getBranch().getId()));
                     teacher.getIdcardnumber().setPassword(teacher.getIdcardnumber().getIdCardNumber().substring(teacher.getIdcardnumber().getIdCardNumber().length()-6));
-                    if (teacherDaoInter.add(teacher)&&userInfoDaoInter.add(teacher.getIdcardnumber())){
+                    if (teacherDaoInter.add(teacher)){
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
                     }else{

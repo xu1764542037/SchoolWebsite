@@ -11,6 +11,8 @@ public class Class{
     private Integer id;
     private String className;
     private Profession profession;
+    private Date createTime;
+    private Date endTime;
     private String status;
     private String description;
 }
