@@ -8,9 +8,9 @@ import java.util.Date;
 
 @Component
 @Data
-public class UserInfo {
-    private String idCardNumber;
-    private String password;
-    private String code;
-    private Date createTime;
+public class Admin {
+    String login;
+    String password;
+    Integer code;
+    Date createTime;
 }

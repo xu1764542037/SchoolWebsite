@@ -19,7 +19,7 @@
     </resultMap>
 
     <insert id="add">
-        insert into schoolwebsite.grade
+        replace into schoolwebsite.grade
         <trim>
             ( id
             , studentid
@@ -75,14 +75,8 @@
         where grade.id = #{grade.id}
     </update>
 
-    <select id="selectbyname" resultMap="res">
-        select grade.id
-             , grade.studentid
-             , grade.courseid
-             , grade.grade
-             , grade.createtime
-             , grade.status
-             , grade.description
+    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Grade">
+        select grade.*
              , student.studentid
              , student.studentname
              , student.studentsex
@@ -105,13 +99,7 @@
     </select>
 
     <select id="selectbyid" resultMap="res">
-        select grade.id
-        , grade.studentid
-        , grade.courseid
-        , grade.grade
-        , grade.createtime
-        , grade.status
-        , grade.description
+        select grade.*
         , student.studentid
         , student.studentname
         , student.studentsex

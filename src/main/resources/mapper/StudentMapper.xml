@@ -31,7 +31,11 @@
     </resultMap>
 
     <insert id="add">
-        insert into schoolwebsite.student
+        replace into schoolwebsite.userInfo
+            (idcardnumber, password,code,createTime)
+            VALUE
+            (#{student.idcardnumber.idCardNumber},#{student.idcardnumber.password},#{student.idcardnumber.code},NOW());
+        replace into schoolwebsite.student
         <trim>
             ( studentId
             , IdCardNumber
@@ -85,7 +89,7 @@
             <if test="student.description!=null">
             ,#{student.description}
             </if>
-            )
+            );
         </trim>
     </insert>
 

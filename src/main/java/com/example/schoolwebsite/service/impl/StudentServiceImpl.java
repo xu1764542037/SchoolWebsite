@@ -67,7 +67,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                 ){
                     student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
                     
-                    if (studentDaoInter.add(student)&&userInfoDaoInter.add(student.getIdcardnumber())) {
+                    if (studentDaoInter.add(student)) {
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
                     }else {

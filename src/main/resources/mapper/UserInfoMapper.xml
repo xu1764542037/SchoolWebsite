@@ -2,10 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.UserInfoDaoInter">
 
-    <insert id="add">
-        insert into schoolwebsite.userInfo (idcardnumber, password,dir_code) VALUE (#{userInfo.idCardNumber},#{userInfo.password},#{userInfo.code})
-    </insert>
-
     <delete id="delete">
         delete from schoolwebsite.userInfo where IdCardNumber like #{userInfoId}
     </delete>
@@ -17,7 +13,7 @@
             password = #{userInfo.password}
         </if>
         <if test="userInfo.code!=null">
-            ,dir_code = #{userInfo.code}
+            ,code = #{userInfo.code}
         </if>
         </trim>
         where   idcardnumber = #{userInfo.idCardNumber}
@@ -32,6 +28,10 @@
             </if>
         </where>
 
+    </select>
+
+    <select id="checkuser" resultType="java.lang.Boolean">
+        select * from schoolwebsite.userInfo where IdCardNumber like #{userInfoId}
     </select>
 
 </mapper>

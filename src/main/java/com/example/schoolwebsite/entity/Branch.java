@@ -10,6 +10,7 @@ import java.util.Date;
 public class Branch{
     private Integer id;
     private String branchName;
+    private Date createTime;
     private String status;
     private String description;
 }

@@ -1,5 +1,7 @@
 package com.example.schoolwebsite.service.impl;
 
+import com.example.schoolwebsite.dao.StudentDaoInter;
+import com.example.schoolwebsite.dao.TeacherDaoInter;
 import com.example.schoolwebsite.dao.UserInfoDaoInter;
 import com.example.schoolwebsite.entity.BackReturn;
 import com.example.schoolwebsite.entity.UserInfo;
@@ -14,6 +16,10 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
 
     @Autowired
     private UserInfoDaoInter userInfoDaoInter;
+    @Autowired
+    private StudentDaoInter studentDaoInter;
+    @Autowired
+    private TeacherDaoInter teacherDaoInter;
 
     @Override
     public BackReturn delete(String IdCardNumber) {
@@ -66,26 +72,25 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
     public BackReturn select(String IdCardNumber,String password) {
         BackReturn backReturn = new BackReturn();
         List<UserInfo> userInfoList;
-        if (IdCardNumber!=null&&!"".equals(IdCardNumber)){
+        if (IdCardNumber!=null&&!"".equals(IdCardNumber)&&password!=null&&!"".equals(password)){
             userInfoList = userInfoDaoInter.selectbyid(IdCardNumber,password);
             if (userInfoList.size()>0) {
                 backReturn.setMsg("已查询到指定数据");
                 backReturn.setCode(1);
-                backReturn.setObj(userInfoList);
+                switch (Integer.parseInt(userInfoList.get(0).getCode())) {
+                    case 1 : backReturn.setObj(studentDaoInter.selectbyid(IdCardNumber,null));
+                    break;
+                    case 2 : backReturn.setObj(teacherDaoInter.selectbyid(IdCardNumber,null));
+                    break;
+                    default: backReturn.setObj(null);
+                }
             }else{
                 backReturn.setMsg("未查询到指定数据");
                 backReturn.setCode(0);
             }
         }else{
-            userInfoList = userInfoDaoInter.selectbyid(null,null);
-            if (userInfoList.size()>0) {
-                backReturn.setMsg("已查询到数据");
-                backReturn.setCode(1);
-                backReturn.setObj(userInfoList);
-            }else{
-                backReturn.setMsg("数据被清空或系统异常，未查询到数据");
-                backReturn.setCode(-1);
-            }
+            backReturn.setMsg("登录信息不全，无法验证");
+            backReturn.setCode(0);
         }
         return backReturn;
     }

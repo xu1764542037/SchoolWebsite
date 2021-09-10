@@ -15,6 +15,7 @@ public class Teacher {
     private Branch branch;
     private String level;
     private Integer salary;
+    private Date createTime;
     private String status;
     private String description;
 }
