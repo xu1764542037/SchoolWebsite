@@ -1,4 +1,4 @@
-package com.example.schoolwebsite.inspect;
+package com.example.schoolwebsite.network.inspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -16,8 +16,8 @@ import java.util.Enumeration;
 
 @Aspect
 @Component//配置bean
-public class WebLogAspect {
-    private final Logger logger = LoggerFactory.getLogger(WebLogAspect.class);
+public class WebRequestLogAspect {
+    private final Logger logger = LoggerFactory.getLogger(WebRequestLogAspect.class);
 
     @Pointcut("execution(public * com.example.schoolwebsite.controller..*.*(..))")
     public void webLog() {
