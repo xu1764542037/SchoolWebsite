@@ -1,4 +1,4 @@
-package com.example.schoolwebsite.network.inspect;
+package com.example.schoolwebsite.network.Aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;

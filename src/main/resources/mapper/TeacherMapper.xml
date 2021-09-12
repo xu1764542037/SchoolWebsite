@@ -102,10 +102,8 @@
              schoolwebsite.userInfo
             where
              teacher.branch = branch.branchId
-        <if test="teacher.idcardnumber!=null">
-            <if test="teacher.idcardnumber.idCardNumber!=null">
-                and userInfo.IdCardNumber like #{teacher.idcardnumber.idCardNUmber}
-            </if>
+        <if test="IdCardNumber!=null">
+            and userInfo.IdCardNumber like #{IdCardNUmber}
         </if>
             <if test="branch!=null">
             and teacher.branch = #{branch}
@@ -132,10 +130,8 @@
         where
         teacher.branch = branch.branchId
         and teacher.IdCardNumber = userInfo.IdCardNumber
-        <if test="teacher.idcardnumber!=null">
-            <if test="teacher.idcardnumber.idCardNumber!=null">
-                and userInfo.IdCardNumber like #{teacher.idcardnumber.idCardNUmber}
-            </if>
+        <if test="IdCardNumber!=null">
+                and userInfo.IdCardNumber like #{IdCardNUmber}
         </if>
         <if test="teacherId!=null">
             and teacher.teacherId = #{teacherId}
