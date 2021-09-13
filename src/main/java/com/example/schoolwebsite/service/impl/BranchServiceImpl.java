@@ -84,19 +84,12 @@ public class BranchServiceImpl implements BranchServiceInter {
                     backReturn.setMsg("系统异常，修改失败");
                     backReturn.setCode(-1);
                 }
-                return backReturn;
             }
         }else{
-            branch.setId(IdMaker.BranchIdMaker());
-            if (branchDaoInter.add(branch)){
-                backReturn.setMsg("该分院不存在，已为您添加分院数据");
-                backReturn.setCode(0);
-            }else{
-                backReturn.setMsg("分院不存在，系统出错");
-                backReturn.setCode(-1);
-            }
-            return backReturn;
+            backReturn.setMsg("分院不存在，修改失败");
+            backReturn.setCode(0);
         }
+        return backReturn;
     }
 
     @Override
