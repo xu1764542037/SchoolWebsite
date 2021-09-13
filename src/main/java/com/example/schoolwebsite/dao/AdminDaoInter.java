@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface AdminDaoInter {
     Boolean select(@Param("login") String Login,@Param("password") String Password);
-    Boolean update(Admin admin);
-    Boolean add(Admin admin);
+    Boolean update(@Param("admin") Admin admin);
+    Boolean add(@Param("admin") Admin admin);
     List<Admin> selectall();
 }

@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.AdminDaoInter">
 
+    <resultMap id="res" type="com.example.schoolwebsite.entity.Admin">
+        <id property="login" javaType="java.lang.String" jdbcType="VARCHAR" column="IdCardNumber"/>
+        <result property="password" javaType="java.lang.String" jdbcType="VARCHAR" column="password"/>
+        <result property="code" javaType="java.lang.Integer" jdbcType="INTEGER" column="code"/>
+        <result property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" column="createTime"/>
+    </resultMap>
     <insert id="add" useGeneratedKeys="true" keyColumn="id">
         replace into schoolwebsite.userInfo (IdCardNumber, password, code,createTime) value (#{admin.login},#{admin.password},#{admin.code},NOW())
     </insert>
@@ -16,14 +22,14 @@
                 ,code = #{admin.code}
             </if>
         </trim>
-        where   idcardnumber = #{admin.idCardNumber}
+        where   idcardnumber = #{admin.login}
     </update>
 
     <select id="select" resultType="java.lang.Boolean">
         select * from schoolwebsite.userInfo where IdCardNumber = #{login} and password = #{password}
     </select>
 
-    <select id="selectall" resultType="com.example.schoolwebsite.entity.Admin">
+    <select id="selectall" resultMap="res">
         select * from schoolwebsite.userInfo where code>=5
     </select>
 
