@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.schoolwebsite.dao.Teacher_ClassDaoInter">
+
+    <insert id="add" keyColumn="id" useGeneratedKeys="true">
+        replace into schoolwebsite.`teacher-class-course`
+            ( id
+            , teacherId
+            , classId
+            , courseId
+            , createTime
+            <if test="teacher_class.status!=null">
+            , status
+            </if>
+            <if test="teacher_class.description!=null">
+            , description
+            </if>
+            )
+            VALUE
+            ( #{teacher_class.id}
+            , #{teacher_class.teacher.id}
+            , #{teacher_class.classes.id}
+            , #{teacher_class.course.id}
+            ,NOW()
+            <if test="teacher_class.status!=null">
+            , #{teacher_class.status}
+            </if>
+            <if test="teacher_class.description!=null">
+            , #{teacher_class.description}
+            </if>
+        )
+    </insert>
+
+    <insert id="Batchadd" useGeneratedKeys="true" keyColumn="id">
+        replace into schoolwebsite.`teacher-class-course`
+        <trim>
+            ( id
+            , teacherId
+            , classId
+            , courseId
+            , createTime
+            <if test="teacher_class.status!=null">
+                , status
+            </if>
+            <if test="teacher_class.description!=null">
+                , description
+            </if>
+            )
+        </trim>
+        VALUES
+        <foreach collection="teacher_class" item="item" separator=",">
+            ( #{item.id}
+            , #{item.teacher.id}
+            , #{item.classes.id}
+            , #{item.course.id}
+            ,NOW()
+            <if test="item.status!=null">
+                , #{item.status}
+            </if>
+            <if test="item.description!=null">
+                , #{item.description}
+            </if>
+            )
+        </foreach>
+    </insert>
+
+    <delete id="delete">
+        delete from schoolwebsite.`teacher-class-course` where
+        id = #{teacher_class.id}
+        <if test="teacher_class.classId">
+        and classId = #{teacher_class.classId}
+        </if>
+        <if test="teacher_class.courseId!=null">
+        and courseId = #{teacher_class.courseId}
+        </if>
+        <if test="teacher_class.teacherId!=null">
+        and teacherId = #{teacher_class.teacherId}
+        </if>
+    </delete>
+
+    <update id="update">
+        update schoolwebsite.`teacher-class-course` set
+        <trim prefixOverrides=",">
+            <if test="teacher_class.teacherId!=null">
+            teacherId = #{teacher_class.teacherId}
+            </if>
+            <if test="teacher_class.classId!=null">
+            ,classId = #{teacher_class.classId}
+            </if>
+            <if test="teacher_class.courseId!=null">
+            ,courseId = #{teacher_class.courseId}
+            </if>
+            <if test="teacher_class.status!=null">
+            ,status = #{teacher_class,status}
+            </if>
+            <if test="teacher_class.description!=null">
+            ,description = #{teacher_class.description}
+            </if>
+        </trim>
+        WHERE
+        id = #{teacher_class.id}
+    </update>
+
+    <select id="select" resultType="com.example.schoolwebsite.entity.Teacher_Class">
+        select `teacher-class-course`.id
+             , `teacher-class-course`.teacherId
+             , `teacher-class-course`.classId
+             , `teacher-class-course`.courseId
+             , `teacher-class-course`.createTime
+             , `teacher-class-course`.status
+             , `teacher-class-course`.description
+             , course.courseId
+             , course.courseName
+             , teacher.teacherId
+             , teacher.IdCardNumber
+             , teacher.teacherName
+             , teacher.teacherSex
+             , teacher.branch
+             , branch.branchId
+             , branch.branchName
+             , class.classId
+             , class.className
+        from
+                      schoolwebsite.`teacher-class-course`
+                    , schoolwebsite.course
+                    , schoolwebsite.teacher
+                    , schoolwebsite.class
+                    , schoolwebsite.branch
+        where   `teacher-class-course`.teacherId = teacher.teacherId
+        and     `teacher-class-course`.courseId = course.courseId
+        and     `teacher-class-course`.classId = class.classId
+        and     teacher.branch = branch.branchId
+        <if test="teacherId!=null">
+            and `teacher-class-course`.teacherId = #{teacherId}
+        </if>
+        <if test="courseId!=null">
+            and `teacher-class-course`.courseId = #{courseId}
+        </if>
+        <if test="classId!=null">
+            and `teacher-class-course`.classId = #{classId}
+        </if>
+    </select>
+
+</mapper>

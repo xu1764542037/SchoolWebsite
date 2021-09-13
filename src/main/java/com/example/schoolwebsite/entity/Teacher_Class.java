@@ -7,9 +7,10 @@ import java.util.Date;
 
 @Component
 @Data
-public class Teacher_Course{
+public class Teacher_Class {
     private Integer id;
     private Teacher teacher;
+    private Class classes;
     private Course course;
     private Date createTime;
     private String status;
