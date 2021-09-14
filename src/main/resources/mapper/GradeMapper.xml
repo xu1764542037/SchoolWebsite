@@ -75,7 +75,7 @@
         where grade.id = #{grade.id}
     </update>
 
-    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Grade">
+    <select id="selectbyname" resultMap="res">
         select grade.*
              , student.studentid
              , student.studentname
@@ -91,10 +91,10 @@
              grade.studentId = student.studentId and
              grade.courseId = course.courseId
              <if test="studentName!=null">
-                and student.studentName = #{studentName}
+                and student.studentName like CONCAT(#{studentName},'%')
              </if>
              <if test="courseName!=null">
-                and course.courseName = #{courseName}
+                and course.courseName like CONCAT('%',#{courseName},'%')
              </if>
     </select>
 

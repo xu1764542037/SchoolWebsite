@@ -31,13 +31,18 @@ public class GradeServiceImpl implements GradeServiceInter {
                         studentDaoInter.selectbyid(null,grade.getStudent().getId()).size()>0&&
                         courseDaoInter.selectbyid(grade.getCourse().getId()).size()>0
                 ){
-                    grade.setId(IdMaker.GradeIdMaker());
-                    if (gradeDaoInter.add(grade)) {
-                        backReturn.setMsg("添加成功");
-                        backReturn.setCode(1);
+                    if (grade.getGrade()!=null){
+                        grade.setId(IdMaker.GradeIdMaker());
+                        if (gradeDaoInter.add(grade)) {
+                            backReturn.setMsg("添加成功");
+                            backReturn.setCode(1);
+                        }else{
+                            backReturn.setMsg("系统异常，添加失败");
+                            backReturn.setCode(-1);
+                        }
                     }else{
-                        backReturn.setMsg("系统异常，添加失败");
-                        backReturn.setCode(-1);
+                        backReturn.setCode(0);
+                        backReturn.setMsg("学生学科成绩不能为空");
                     }
                 }else{
                     backReturn.setMsg("学生或课程信息无效，无法添加");
@@ -87,9 +92,7 @@ public class GradeServiceImpl implements GradeServiceInter {
                         grade.setCourse(null);
                     }else{
                         if (courseDaoInter.selectbyid(grade.getCourse().getId()).size()<=0) {//Course有效性判定
-                            backReturn.setMsg("课程信息无效，修改失败");
-                            backReturn.setCode(0);
-                            return backReturn;
+                            grade.setCourse(null);
                         }
                     }
                 }
@@ -98,9 +101,7 @@ public class GradeServiceImpl implements GradeServiceInter {
                         grade.setStudent(null);
                     }else{
                         if (studentDaoInter.selectbyid(null,grade.getStudent().getId()).size()<=0) {//Student有效性判定
-                            backReturn.setMsg("学生信息无效，修改失败");
-                            backReturn.setCode(0);
-                            return backReturn;
+                            grade.setStudent(null);
                         }
                     }
                 }
@@ -126,12 +127,18 @@ public class GradeServiceImpl implements GradeServiceInter {
     public BackReturn select(String studentName, String courseName) {
         BackReturn backReturn = new BackReturn();
         List<Grade> gradeList;
-        if (!"".equals(studentName)){
-            if (!"".equals(courseName)){
-                gradeList = gradeDaoInter.selectbyname(studentName, courseName);
-            }else{
-                gradeList = gradeDaoInter.selectbyname(studentName,null);
+        if (studentName==null&&courseName==null){
+            gradeList = gradeDaoInter.selectbyname(null, null);
+            if (gradeList.size()>0){
+                backReturn.setMsg("已查询到数据");
+                backReturn.setCode(1);
+                backReturn.setObj(gradeList);
+            }else {
+                backReturn.setCode(-1);
+                backReturn.setMsg("未查询到数据，系统异常或数据被清空");
             }
+        }else{
+            gradeList = gradeDaoInter.selectbyname(studentName, courseName);
             if (gradeList.size()>0){
                 backReturn.setMsg("已查询到指定数据");
                 backReturn.setCode(1);
@@ -139,29 +146,6 @@ public class GradeServiceImpl implements GradeServiceInter {
             }else {
                 backReturn.setCode(0);
                 backReturn.setMsg("未查询到数据");
-            }
-        }else {
-            if (!"".equals(courseName)){
-                gradeList = gradeDaoInter.selectbyname(null, courseName);
-                if (gradeList.size()>0){
-                    backReturn.setMsg("已查询到指定数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(gradeList);
-                }else {
-                    backReturn.setCode(0);
-                    backReturn.setMsg("未查询到数据");
-                }
-            }else{
-                gradeList = gradeDaoInter.selectbyname(null, null);
-                if (gradeList.size()>0){
-                    backReturn.setMsg("已查询到数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(gradeList);
-                }else {
-                    backReturn.setCode(-1);
-                    backReturn.setMsg("未查询到数据，系统异常或数据被清空");
-                }
-
             }
         }
         return backReturn;

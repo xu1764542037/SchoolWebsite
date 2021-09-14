@@ -15,5 +15,4 @@ public class Grade{
     private Date createTime;
     private String status;
     private String description;
-
 }
