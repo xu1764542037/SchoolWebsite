@@ -38,7 +38,10 @@ public class StudentControllerImpl implements StudentControllerInter {
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(@RequestParam(value = "name",defaultValue = "",required = false) String studentname,@RequestParam(value = "branch",defaultValue = "",required = false) Integer branch,@RequestParam(value = "name",defaultValue = "",required = false) String Class) {
-        return studentService.select(studentname, branch,Class);
+    public BackReturn select(@RequestParam(value = "name",required = false) String studentname,
+                             @RequestParam(value = "branch",required = false) Integer branch,
+                             @RequestParam(value = "class",required = false) String Class,
+                             @RequestParam(value = "profession",required = false)Integer profession) {
+        return studentService.select(studentname, branch,Class,profession);
     }
 }

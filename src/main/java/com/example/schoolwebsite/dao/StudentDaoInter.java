@@ -13,6 +13,9 @@ import java.util.List;
 public interface StudentDaoInter{
     Boolean add(@Param("student") Student student);
     Boolean update(@Param("student") Student student);
-    List<Student> selectbyname(@Param("studentName") String studentName, @Param("branch") Integer branch,@Param("Class")String Class);
+    List<Student> selectbyname(@Param("studentName") String studentName,
+                               @Param("branch") Integer branch,
+                               @Param("Class")String Class,
+                               @Param("profession") Integer profession);
     List<Student> selectbyid(@Param("IdCardNumber") String IdCardNumber,@Param("studentId") Integer studentId);
 }

@@ -117,35 +117,40 @@ public class StudentServiceImpl implements StudentServiceInter {
     public BackReturn update(Student student) {
         BackReturn backReturn = new BackReturn();
         if (student!=null){
-            if (student.getBranch()!=null) {
-                if (student.getBranch().getId()==null){
-                    student.setBranch(null);
+            if (student.getIdcardnumber().getIdCardNumber()!=null){
+                if (student.getBranch()!=null) {
+                    if (student.getBranch().getId()==null){
+                        student.setBranch(null);
+                    }
                 }
-            }
-            if (student.getProfession()!=null){
-                if (student.getProfession().getId()==null){
-                    student.setProfession(null);
+                if (student.getProfession()!=null){
+                    if (student.getProfession().getId()==null){
+                        student.setProfession(null);
+                    }
                 }
-            }
-            if (student.getClasses()!=null){
-                if (student.getClasses().getId()==null){
-                    student.setClasses(null);
+                if (student.getClasses()!=null){
+                    if (student.getClasses().getId()==null){
+                        student.setClasses(null);
+                    }
                 }
-            }
-            if (//验证分院、专业、班级信息有效性
-                    professionDaoInter.selectbyid(student.getProfession().getId()).size()>0&&
-                            branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
-                            classDaoInter.selectbyid(student.getClasses().getId()).size()>0
-            ){
-                if (studentDaoInter.update(student)) {
-                    backReturn.setMsg("修改成功");
-                    backReturn.setCode(0);
+                if (//验证分院、专业、班级信息有效性
+                        professionDaoInter.selectbyid(student.getProfession().getId()).size()>0&&
+                                branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
+                                classDaoInter.selectbyid(student.getClasses().getId()).size()>0
+                ){
+                    if (studentDaoInter.update(student)) {
+                        backReturn.setMsg("修改成功");
+                        backReturn.setCode(1);
+                    }else{
+                        backReturn.setMsg("系统异常，修改失败");
+                        backReturn.setCode(-1);
+                    }
                 }else{
-                    backReturn.setMsg("系统异常，修改失败");
-                    backReturn.setCode(-1);
+                    backReturn.setMsg("添加失败，分院、专业或班级信息无效，请核验后再试");
+                    backReturn.setCode(0);
                 }
             }else{
-                backReturn.setMsg("添加失败，分院、专业或班级信息无效，请核验后再试");
+                backReturn.setMsg("无法验证被修改学生身份，检查身份证信息后重试");
                 backReturn.setCode(0);
             }
         }else{
@@ -156,23 +161,21 @@ public class StudentServiceImpl implements StudentServiceInter {
     }
 
     @Override
-    public BackReturn select(String studentname, Integer branch,String Class) {
+    public BackReturn select(String studentname, Integer branch,String Class,Integer profession) {
         BackReturn backReturn = new BackReturn();
         List<Student> student;
-        if (!"".equals(studentname)){
-            if (branch!=null&&branch!=0){
-                if (!"".equals(Class)){
-                    student = studentDaoInter.selectbyname(studentname,branch,Class);
-                }else{
-                    student = studentDaoInter.selectbyname(studentname,branch,null);
-                }
+        if (studentname==null&&branch==null&&Class==null&&profession==null){
+            student = studentDaoInter.selectbyname(null,null,null,null);
+            if (student.size()>0){
+                backReturn.setMsg("已查询到数据");
+                backReturn.setCode(1);
+                backReturn.setObj(student);
             }else{
-                if (!"".equals(Class)){
-                    student = studentDaoInter.selectbyname(studentname,null,Class);
-                }else{
-                    student = studentDaoInter.selectbyname(studentname,null,null);
-                }
+                backReturn.setMsg("系统异常，未查询到数据或数据已被清空");
+                backReturn.setCode(-1);
             }
+        }else{
+            student = studentDaoInter.selectbyname(studentname, branch, Class, profession);
             if (student.size()>0){
                 backReturn.setMsg("已查询到指定数据");
                 backReturn.setCode(1);
@@ -180,44 +183,6 @@ public class StudentServiceImpl implements StudentServiceInter {
             }else{
                 backReturn.setMsg("未查询到指定数据");
                 backReturn.setCode(0);
-            }
-        }else{
-            if (branch!=null&&branch!=0){
-                if (!"".equals(Class)){
-                    student = studentDaoInter.selectbyname(null,branch,Class);
-                }else{
-                    student = studentDaoInter.selectbyname(null,branch,null);
-                }
-                if (student.size()>0){
-                    backReturn.setMsg("已查询到指定数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(student);
-                }else{
-                    backReturn.setMsg("未查询到指定数据");
-                    backReturn.setCode(0);
-                }
-            }else{
-                if (!"".equals(Class)){
-                    student = studentDaoInter.selectbyname(null,null,Class);
-                    if (student.size()>0){
-                        backReturn.setMsg("已查询到指定数据");
-                        backReturn.setCode(1);
-                        backReturn.setObj(student);
-                    }else{
-                        backReturn.setMsg("未查询到指定数据");
-                        backReturn.setCode(0);
-                    }
-                }else{
-                    student = studentDaoInter.selectbyname(null,null,null);
-                }
-                if (student.size()>0){
-                    backReturn.setMsg("已查询到数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(student);
-                }else{
-                    backReturn.setMsg("未查询到数据，系统异常或数据被清空");
-                    backReturn.setCode(-1);
-                }
             }
         }
         return backReturn;
