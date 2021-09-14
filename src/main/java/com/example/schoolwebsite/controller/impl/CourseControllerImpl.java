@@ -37,7 +37,7 @@ public class CourseControllerImpl implements CourseControllerInter {
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(@RequestParam(value = "name",defaultValue = "",required = false) String courseName) {
+    public BackReturn select(@RequestParam(value = "name",required = false) String courseName) {
         return courseService.select(courseName);
     }
 }

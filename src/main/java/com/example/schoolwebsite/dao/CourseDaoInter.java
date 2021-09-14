@@ -16,5 +16,4 @@ public interface CourseDaoInter{
     Boolean update(@Param("course") Course course);
     List<Course> selectbyname(@Param("courseName") String courseName);
     List<Course> selectbyid(@Param("courseId") Integer courseId);
-    List<Course> select();
 }

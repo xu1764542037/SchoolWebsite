@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.CourseDaoInter">
 
+    <resultMap id="res" type="com.example.schoolwebsite.entity.Course">
+        <id column="courseId" jdbcType="VARCHAR" javaType="java.lang.Integer" property="id"/>
+        <result column="courseName" jdbcType="VARCHAR" javaType="java.lang.String" property="courseName"/>
+        <result column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" property="createTime"/>
+        <result column="status" jdbcType="VARCHAR" javaType="java.lang.String" property="status"/>
+        <result column="description" jdbcType="VARCHAR" javaType="java.lang.String" property="description"/>
+    </resultMap>
+
     <insert id="add">
         replace into schoolwebsite.course
         <trim>
@@ -49,16 +57,12 @@
         where courseId = #{course.id}
     </update>
 
-    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Course">
-        select * from schoolwebsite.course where courseName like CONCAT('%',#{courseName})
+    <select id="selectbyname" resultMap="res">
+        select * from schoolwebsite.course where courseName like CONCAT('%',#{courseName},'%')
     </select>
 
-    <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Course">
+    <select id="selectbyid" resultMap="res">
         select * from schoolwebsite.course where courseId = #{courseId}
-    </select>
-
-    <select id="select" resultType="com.example.schoolwebsite.entity.Course">
-        select * from schoolwebsite.course
     </select>
 
 </mapper>

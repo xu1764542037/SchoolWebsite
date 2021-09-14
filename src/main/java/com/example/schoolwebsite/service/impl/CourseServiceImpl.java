@@ -92,10 +92,11 @@ public class CourseServiceImpl implements CourseServiceInter {
         BackReturn backReturn = new BackReturn();
         List<Course> courses;
         if ("".equals(courseName)){
-            courses = courseDaoInter.select();
+            courses = courseDaoInter.selectbyname("");
             if (courses.size()>0){
                 backReturn.setCode(0);
                 backReturn.setMsg("已查询到数据");
+                backReturn.setObj(courses);
             }else {
                 backReturn.setMsg("未查询到数据，系统异常或数据被清空");
                 backReturn.setCode(-1);
@@ -105,6 +106,7 @@ public class CourseServiceImpl implements CourseServiceInter {
             if (courses.size()>0){
                 backReturn.setMsg("已查询到指定数据");
                 backReturn.setCode(1);
+                backReturn.setObj(courses);
             }else{
                 backReturn.setMsg("未查询到指定数据");
                 backReturn.setCode(0);
