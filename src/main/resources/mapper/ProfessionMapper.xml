@@ -4,6 +4,9 @@
     <resultMap id="res" type="com.example.schoolwebsite.entity.Profession">
         <id column="professionId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
         <result column="professionName" jdbcType="VARCHAR" javaType="java.lang.String" property="professionName"/>
+        <result column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" property="createTime"/>
+        <result column="status" jdbcType="VARCHAR" javaType="java.lang.String" property="status"/>
+        <result column="description" jdbcType="VARCHAR" javaType="java.lang.String" property="description"/>
         <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
             <result column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
             <result column="branchName" jdbcType="VARCHAR" javaType="java.lang.String" property="branchName"/>
@@ -66,7 +69,7 @@
         where professionId = #{profession.id}
     </update>
 
-    <select id="selectbyid" resultType="com.example.schoolwebsite.entity.Profession">
+    <select id="selectbyid" resultMap="res">
         select
                profession.*,
                branch.branchId,
@@ -78,7 +81,7 @@
               profession.professionId = #{professionId}
     </select>
 
-    <select id="selectbyname" resultType="com.example.schoolwebsite.entity.Profession">
+    <select id="selectbyname" resultMap="res">
         select
             profession.*,
             branch.branchId,
@@ -88,7 +91,7 @@
         where
             profession.branch = branch.branchId
             <if test="professionName!=null">
-                and profession.professionName like CONCAT('%',#{professionName})
+                and profession.professionName like CONCAT('%',#{professionName},'%')
             </if>
             <if test="branch!=null">
                 and profession.branch = #{branch}
