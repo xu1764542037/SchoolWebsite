@@ -10,8 +10,6 @@ import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class ClassServiceImpl implements ClassServiceInter {
             if (!"".equals(classes.getClassName())) {
                 if (classes.getProfession().getId()!=null&&classes.getProfession().getId()!=0){//专业ID判空
                     if (professionDaoInter.selectbyid(classes.getProfession().getId()).size()>0) {//专业ID有效性
-                        if (classDaoInter.selectbyname(classes.getClassName(),classes.getProfession().getId()).size()>0) {//班级查重
+                        if (classDaoInter.selectbyname(classes.getClassName(),classes.getProfession().getId(),null).size()>0) {//班级查重
                             backReturn.setMsg("班级已存在，请勿重复添加");
                             backReturn.setCode(0);
                             return backReturn;
@@ -125,21 +123,12 @@ public class ClassServiceImpl implements ClassServiceInter {
     }
 
     @Override
-    public BackReturn select(String className){
+    public BackReturn select(String className, Integer Profession, Integer Branch){
         BackReturn backReturn = new BackReturn();
         List<Class> classes;
-        if (!"".equals(className)){
-            classes = classDaoInter.selectbyname(className,null);
-            if (classes.size()>0) {
-                backReturn.setMsg("已查询到指定数据");
-                backReturn.setCode(1);
-                backReturn.setObj(classes);
-            }else{
-                backReturn.setMsg("未查询到指定数据");
-                backReturn.setCode(0);
-            }
-        }else {
-            classes = classDaoInter.select();
+
+        if (className==null&&Profession==null&&Branch==null){
+            classes = classDaoInter.selectbyname(null,null,null);
             if (classes.size() > 0) {
                 backReturn.setMsg("已查询到数据");
                 backReturn.setCode(1);
@@ -147,6 +136,16 @@ public class ClassServiceImpl implements ClassServiceInter {
             } else {
                 backReturn.setMsg("系统异常或数据被清除，查询失败");
                 backReturn.setObj(-1);
+            }
+        }else{
+            classes = classDaoInter.selectbyname(className, Profession, Branch);
+            if (classes.size()>0) {
+                backReturn.setMsg("已查询到指定数据");
+                backReturn.setCode(1);
+                backReturn.setObj(classes);
+            }else{
+                backReturn.setMsg("未查询到指定数据");
+                backReturn.setCode(0);
             }
         }
         return backReturn;
