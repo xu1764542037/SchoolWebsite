@@ -150,7 +150,7 @@
         teacher.branch = branch.branchId
         and teacher.IdCardNumber = userInfo.IdCardNumber
         <if test="IdCardNumber!=null">
-                and userInfo.IdCardNumber like #{IdCardNUmber}
+                and userInfo.IdCardNumber like #{IdCardNumber}
         </if>
         <if test="teacherId!=null">
             and teacher.teacherId = #{teacherId}

@@ -14,3 +14,4 @@ public class Admin {
     Integer code;
     Date createTime;
 }
+//通过控制层测试

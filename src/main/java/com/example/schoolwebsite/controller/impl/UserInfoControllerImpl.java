@@ -32,7 +32,8 @@ public class UserInfoControllerImpl implements UserInfoControllerInter {
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(@RequestParam(value = "id",required = false) String IdCardNumber,@RequestParam(value = "password",required = false) String Password) {
+    public BackReturn select(@RequestParam(value = "id",required = false) String IdCardNumber,
+                             @RequestParam(value = "password",required = false) String Password) {
         return userInfoService.select(IdCardNumber, Password);
     }
 }

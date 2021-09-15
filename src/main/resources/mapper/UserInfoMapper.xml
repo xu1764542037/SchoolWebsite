@@ -20,7 +20,7 @@
     </update>
 
     <select id="selectbyid" resultType="com.example.schoolwebsite.entity.UserInfo">
-        select * from schoolwebsite.userInfo
+        select IdCardNumber,code from schoolwebsite.userInfo
         <where>
             <if test="userInfoId!=null">
                 IdCardNumber like #{userInfoId}
@@ -31,7 +31,8 @@
     </select>
 
     <select id="checkuser" resultType="java.lang.Boolean">
-        select * from schoolwebsite.userInfo where IdCardNumber like #{userInfoId}
+        select COUNT(*) from schoolwebsite.userInfo where IdCardNumber like #{userInfoId}
     </select>
+
 
 </mapper>

@@ -1,17 +1,14 @@
 package com.example.schoolwebsite.entity;
 
-
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 @Data
-public class UserInfo {
+public class AllUserInfo {
     private String idCardNumber;
-    private String password;
+    private String name;
+    private String sex;
     private String code;
-    private Date createTime;
+    private Branch branch;
 }
-//通过控制层测试
