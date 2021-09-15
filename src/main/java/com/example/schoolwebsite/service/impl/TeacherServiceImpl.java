@@ -28,18 +28,19 @@ public class TeacherServiceImpl implements TeacherServiceInter {
         //判空
         if (teacher!=null){
             //必要信息判空
-            if (    teacher.getIdcardnumber()!=null
-                    &&teacher.getBranch()!=null
-                    &&!"".equals(teacher.getSex())
-                    &&!"".equals(teacher.getTeacherName())
+            if (    teacher.getIdcardnumber()!=null//身份证
+                    &&teacher.getBranch()!=null//所属分院
+                    &&!"".equals(teacher.getSex())//性别
+                    &&!"".equals(teacher.getTeacherName())//姓名
                     &&!"".equals(teacher.getIdcardnumber().getIdCardNumber())
-                    &&teacher.getSalary()!=null
+                    &&teacher.getSalary()!=null//薪资
                     &&teacher.getSalary()!=0
                     &&teacher.getBranch().getId()!=null
-                    &&!"".equals(teacher.getIdcardnumber().getCode())){
+                    &&!"".equals(teacher.getIdcardnumber().getCode())){//身份
                 //有效性判定
+                System.out.println(userInfoDaoInter.checkuser(teacher.getIdcardnumber().getIdCardNumber())+"结果");
                 if (branchDaoInter.selectbyid(teacher.getBranch().getId()).size()>0
-                        &&userInfoDaoInter.selectbyid(teacher.getIdcardnumber().getIdCardNumber(),null).size()<=0){
+                        &&!userInfoDaoInter.checkuser(teacher.getIdcardnumber().getIdCardNumber())){
                     //必要数据写入
                     teacher.setId(IdMaker.TeacherIdMaker(teacher.getBranch().getId()));
                     teacher.getIdcardnumber().setPassword(teacher.getIdcardnumber().getIdCardNumber().substring(teacher.getIdcardnumber().getIdCardNumber().length()-6));
@@ -89,7 +90,7 @@ public class TeacherServiceImpl implements TeacherServiceInter {
         if (teacher.getId()!=null&&teacher.getId()!=0){
             if (teacherDaoInter.selectbyid(null,teacher.getId()).size()>0) {
                 if (teacher.getBranch()!=null){
-                    if (teacher.getBranch().getId()==null&&teacher.getBranch().getId()==0){
+                    if (teacher.getBranch().getId()==null||teacher.getBranch().getId()==0||branchDaoInter.selectbyid(teacher.getBranch().getId()).size()==0){
                         teacher.setBranch(null);
                     }
                 }
@@ -112,49 +113,25 @@ public class TeacherServiceImpl implements TeacherServiceInter {
     public BackReturn select(String teachername, Integer branch) {
         BackReturn backReturn = new BackReturn();
         List<Teacher> teacherList;
-        if (!"".equals(teachername)&&teachername!=null){
-            if (branch!=null&&branch!=0){
-                teacherList = teacherDaoInter.selectbyname(teachername,branch);
-                if (teacherList.size()>0) {
-                    backReturn.setMsg("已查询到指定数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(teacherList);
-                }else{
-                    backReturn.setCode(0);
-                    backReturn.setMsg("未查询到指定数据");
-                }
+        if (teachername==null&&branch==null){
+            teacherList = teacherDaoInter.selectbyname(null,null);
+            if (teacherList.size()>0) {
+                backReturn.setMsg("已查询到数据");
+                backReturn.setCode(1);
+                backReturn.setObj(teacherList);
             }else{
-                teacherList = teacherDaoInter.selectbyname(teachername,null);
-                if (teacherList.size()>0) {
-                    backReturn.setMsg("已查询到指定数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(teacherList);
-                }else{
-                    backReturn.setCode(0);
-                    backReturn.setMsg("未查询到指定数据");
-                }
+                backReturn.setCode(-1);
+                backReturn.setMsg("未查询到数据，系统出错或数据已被清空");
             }
         }else{
-            if (branch!=null&&branch!=0){
-                teacherList = teacherDaoInter.selectbyname(null,branch);
-                if (teacherList.size()>0) {
-                    backReturn.setMsg("已查询到指定数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(teacherList);
-                }else{
-                    backReturn.setCode(0);
-                    backReturn.setMsg("未查询到指定数据");
-                }
+            teacherList = teacherDaoInter.selectbyname(teachername,branch);
+            if (teacherList.size()>0) {
+                backReturn.setMsg("已查询到指定数据");
+                backReturn.setCode(1);
+                backReturn.setObj(teacherList);
             }else{
-                teacherList = teacherDaoInter.selectbyname(null,null);
-                if (teacherList.size()>0) {
-                    backReturn.setMsg("已查询到数据");
-                    backReturn.setCode(1);
-                    backReturn.setObj(teacherList);
-                }else{
-                    backReturn.setCode(-1);
-                    backReturn.setMsg("未查询到数据，系统出错或数据已被清空");
-                }
+                backReturn.setCode(0);
+                backReturn.setMsg("未查询到指定数据");
             }
         }
         return backReturn;

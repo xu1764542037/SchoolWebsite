@@ -37,7 +37,8 @@ public class TeacherControllerImpl implements TeacherControllerInter {
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(@RequestParam(value = "name",defaultValue = "",required = false) String teachername,@RequestParam(value = "branch",defaultValue = "",required = false) Integer branch) {
+    public BackReturn select(@RequestParam(value = "name",required = false) String teachername,
+                             @RequestParam(value = "branch",required = false) Integer branch) {
         return teacherService.select(teachername, branch);
     }
 }
