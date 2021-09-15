@@ -13,6 +13,7 @@
         <result column="description" jdbcType="VARCHAR" javaType="java.lang.String" property="description"/>
         <association property="idcardnumber" javaType="com.example.schoolwebsite.entity.UserInfo">
             <id column="IdCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" property="idCardNumber"/>
+            <result property="code" jdbcType="INTEGER" javaType="java.lang.Integer" column="code"/>
         </association>
         <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
             <id column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
@@ -104,6 +105,7 @@
     <select id="selectbyname" resultMap="res">
         select teacher.teacherId
              , userInfo.IdCardNumber
+             , userInfo.code
              , teacher.teacherName
              , teacher.teacherSex
              , teacher.branch
@@ -132,6 +134,7 @@
     <select id="selectbyid" resultMap="res">
         select teacher.teacherId
         , userInfo.IdCardNumber
+        , userInfo.code
         , teacher.teacherName
         , teacher.teacherSex
         , teacher.branch

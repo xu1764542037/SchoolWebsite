@@ -11,7 +11,7 @@ import java.util.Date;
 public class UserInfo {
     private String idCardNumber;
     private String password;
-    private String code;
+    private Integer code;
     private Date createTime;
 }
 //通过控制层测试

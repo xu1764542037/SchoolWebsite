@@ -1,5 +1,6 @@
 package com.example.schoolwebsite;
 
+import com.example.schoolwebsite.dao.UserInfoDaoInter;
 import com.example.schoolwebsite.entity.Class;
 import com.example.schoolwebsite.entity.Profession;
 import com.example.schoolwebsite.entity.UserInfo;
@@ -23,10 +24,16 @@ class SchoolwebsiteApplicationTests {
     ClassServiceImpl classService;
     @Autowired
     UserInfoServiceImpl userInfoService;
+    @Autowired
+    UserInfoDaoInter userInfoDaoInter;
 
     @Test
     void contextLoads(){
-        System.out.println(AdminLoginRandom.LoginRanDom());
+        if (userInfoDaoInter.checkuser("sfawrfa")) {
+            System.out.println(1);
+        }else{
+            System.out.println("无结果");
+        }
     }
     @Test
     void tests(){

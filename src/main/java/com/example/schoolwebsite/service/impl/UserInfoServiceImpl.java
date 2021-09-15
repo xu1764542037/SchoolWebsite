@@ -86,7 +86,7 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
                 if (userInfoList.size()>0) {
                     backReturn.setMsg("已查询到指定数据");
                     backReturn.setCode(1);
-                    switch (Integer.parseInt(userInfoList.get(0).getCode())) {
+                    switch (userInfoList.get(0).getCode()) {
                         case 1 : backReturn.setObj(studentDaoInter.selectbyid(IdCardNumber,null));
                             break;
                         case 2 : backReturn.setObj(teacherDaoInter.selectbyid(IdCardNumber,null));
@@ -104,40 +104,44 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
         }else{
             userInfoList = userInfoDaoInter.selectbyid(null,null);
             for (UserInfo userInfo:userInfoList) {
-                if ("1".equals(userInfo.getCode())){
+                if (userInfo.getCode()==1){
                     List<Student> student = studentDaoInter.selectbyid(userInfo.getIdCardNumber(),null);
                     oneUserInfo.setIdCardNumber(student.get(0).getIdcardnumber().getIdCardNumber());
                     oneUserInfo.setName(student.get(0).getStudentName());
                     oneUserInfo.setSex(student.get(0).getSex());
                     oneUserInfo.setBranch(student.get(0).getBranch());
-                    oneUserInfo.setCode("学生");
+                    oneUserInfo.setCode(1);
+                    oneUserInfo.setCodeDes("学生");
                     userInfos.add(oneUserInfo);
                     oneUserInfo=new AllUserInfo();
                     continue;
                 }
-                if ("2".equals(userInfo.getCode())){
+                if (userInfo.getCode()==2){
                     List<Teacher> teachers = teacherDaoInter.selectbyid(userInfo.getIdCardNumber(),null);
                     oneUserInfo.setIdCardNumber(teachers.get(0).getIdcardnumber().getIdCardNumber());
                     oneUserInfo.setName(teachers.get(0).getTeacherName());
                     oneUserInfo.setSex(teachers.get(0).getSex());
                     oneUserInfo.setBranch(teachers.get(0).getBranch());
-                    oneUserInfo.setCode("教师");
+                    oneUserInfo.setCodeDes("教师");
+                    oneUserInfo.setCode(2);
                     userInfos.add(oneUserInfo);
                     oneUserInfo=new AllUserInfo();
                     continue;
                 }
-                if ("5".equals(userInfo.getCode())){
+                if (userInfo.getCode()==5){
                     oneUserInfo.setBranch(null);
                     oneUserInfo.setSex(null);
-                    oneUserInfo.setCode("管理员");
+                    oneUserInfo.setCodeDes("管理员");
+                    oneUserInfo.setCode(5);
                     userInfos.add(oneUserInfo);
                     oneUserInfo=new AllUserInfo();
                     continue;
                 }
-                if("6".equals(userInfo.getCode())){
+                if(userInfo.getCode()==6){
                     oneUserInfo.setBranch(null);
                     oneUserInfo.setSex(null);
-                    oneUserInfo.setCode("超级管理员");
+                    oneUserInfo.setCodeDes("超级管理员");
+                    oneUserInfo.setCode(6);
                     userInfos.add(oneUserInfo);
                     oneUserInfo=new AllUserInfo();
                 }
