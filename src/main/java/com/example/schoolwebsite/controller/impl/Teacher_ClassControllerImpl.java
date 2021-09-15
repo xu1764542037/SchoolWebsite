@@ -29,25 +29,38 @@ public class Teacher_ClassControllerImpl implements Teacher_ClassControllerInter
 
     @Override
     @PutMapping("/batchAdd")
-    public BackReturn BatchAdd(List<Teacher_Class> teacher_classes) {
-        return teacher_classService.BatchAdd(teacher_classes);
+    public BackReturn BatchAdd(@RequestBody List<Teacher_Class> teacher_classes) {
+        BackReturn backReturn = new BackReturn();
+        try{
+            return teacher_classService.BatchAdd(teacher_classes);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
+
     }
 
     @Override
-    @DeleteMapping("/delete")
-    public BackReturn delete(Teacher_Class teacher_class) {
-        return teacher_classService.delete(teacher_class);
+    @GetMapping("/delete")
+    public BackReturn delete(@RequestParam(value = "id",required = false) Integer id,
+                             @RequestParam(value = "TeaId",required = false) Integer TeacherId,
+                             @RequestParam(value = "ClaId",required = false) Integer ClassId,
+                             @RequestParam(value = "CouId",required = false) Integer CourseId) {
+        return teacher_classService.delete(id, TeacherId, ClassId, CourseId);
     }
 
     @Override
     @PostMapping("/update")
-    public BackReturn update(Teacher_Class teacher_class) {
+    public BackReturn update(@RequestBody Teacher_Class teacher_class) {
         return teacher_classService.update(teacher_class);
     }
 
     @Override
     @GetMapping("/select")
-    public BackReturn select(String teacherId, String courseId, String classId) {
+    public BackReturn select(@RequestParam(value = "TeaId",required = false) Integer teacherId,
+                             @RequestParam(value = "CouId",required = false) Integer courseId,
+                             @RequestParam(value = "ClaId",required = false) Integer classId) {
         return teacher_classService.select(teacherId, courseId, classId);
     }
 }

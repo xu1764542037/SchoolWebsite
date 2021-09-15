@@ -2,6 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.schoolwebsite.dao.Teacher_ClassDaoInter">
 
+    <resultMap id="res" type="com.example.schoolwebsite.entity.Teacher_Class">
+        <id column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+        <result column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" property="createTime"/>
+        <result column="status" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="description" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <association property="teacher" javaType="com.example.schoolwebsite.entity.Teacher">
+            <id column="teacherId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+            <result column="IdCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" property="idcardnumber"/>
+            <result column="teacherName" jdbcType="VARCHAR" javaType="java.lang.String" property="teacherName"/>
+            <result column="teacherSex" jdbcType="VARCHAR" javaType="java.lang.String" property="sex"/>
+            <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
+                <id column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+                <result column="branchName" jdbcType="VARCHAR" javaType="java.lang.String" property="branchName"/>
+            </association>
+        </association>
+        <association property="course" javaType="com.example.schoolwebsite.entity.Course">
+            <id column="courseId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+            <result column="courseName" jdbcType="VARCHAR" javaType="java.lang.String" property="courseName"/>
+        </association>
+        <association property="classes" javaType="com.example.schoolwebsite.entity.Class">
+            <id column="classId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
+            <result column="className" jdbcType="VARCHAR" javaType="java.lang.String" property="className"/>
+        </association>
+    </resultMap>
     <insert id="add" keyColumn="id" useGeneratedKeys="true">
         replace into schoolwebsite.`teacher-class-course`
             ( id
@@ -39,12 +63,8 @@
             , classId
             , courseId
             , createTime
-            <if test="teacher_class.status!=null">
-                , status
-            </if>
-            <if test="teacher_class.description!=null">
-                , description
-            </if>
+            , status
+            , description
             )
         </trim>
         VALUES
@@ -54,44 +74,44 @@
             , #{item.classes.id}
             , #{item.course.id}
             ,NOW()
-            <if test="item.status!=null">
-                , #{item.status}
-            </if>
-            <if test="item.description!=null">
-                , #{item.description}
-            </if>
+            , #{item.status}
+            , #{item.description}
             )
         </foreach>
     </insert>
 
     <delete id="delete">
         delete from schoolwebsite.`teacher-class-course` where
-        id = #{teacher_class.id}
-        <if test="teacher_class.classId">
-        and classId = #{teacher_class.classId}
+        <trim prefixOverrides="and">
+        <if test="id!=null">
+        id = #{id}
         </if>
-        <if test="teacher_class.courseId!=null">
-        and courseId = #{teacher_class.courseId}
+        <if test="ClaId!=null">
+        and classId = #{ClaId}
         </if>
-        <if test="teacher_class.teacherId!=null">
-        and teacherId = #{teacher_class.teacherId}
+        <if test="CouId!=null">
+        and courseId = #{CouId}
         </if>
+        <if test="TeaId!=null">
+        and teacherId = #{TeaId}
+        </if>
+        </trim>
     </delete>
 
     <update id="update">
         update schoolwebsite.`teacher-class-course` set
         <trim prefixOverrides=",">
-            <if test="teacher_class.teacherId!=null">
-            teacherId = #{teacher_class.teacherId}
+            <if test="teacher_class.teacher.id!=null">
+            teacherId = #{teacher_class.teacher.id}
             </if>
-            <if test="teacher_class.classId!=null">
-            ,classId = #{teacher_class.classId}
+            <if test="teacher_class.classes.id!=null">
+            ,classId = #{teacher_class.classes.id}
             </if>
-            <if test="teacher_class.courseId!=null">
-            ,courseId = #{teacher_class.courseId}
+            <if test="teacher_class.course.id!=null">
+            ,courseId = #{teacher_class.course.id}
             </if>
             <if test="teacher_class.status!=null">
-            ,status = #{teacher_class,status}
+            ,status = #{teacher_class.status}
             </if>
             <if test="teacher_class.description!=null">
             ,description = #{teacher_class.description}
@@ -115,7 +135,6 @@
              , teacher.IdCardNumber
              , teacher.teacherName
              , teacher.teacherSex
-             , teacher.branch
              , branch.branchId
              , branch.branchName
              , class.classId

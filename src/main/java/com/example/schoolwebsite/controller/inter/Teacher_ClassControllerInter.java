@@ -8,7 +8,7 @@ import java.util.List;
 public interface Teacher_ClassControllerInter {
     BackReturn add(Teacher_Class teacher_class);
     BackReturn BatchAdd(List<Teacher_Class> teacher_classes);
-    BackReturn delete(Teacher_Class teacher_class);
+    BackReturn delete(Integer id,Integer TeacherId,Integer ClassId,Integer CourseId);
     BackReturn update(Teacher_Class teacher_class);
-    BackReturn select(String teacherId,String courseId,String classId);
+    BackReturn select(Integer teacherId,Integer courseId,Integer classId);
 }
