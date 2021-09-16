@@ -8,6 +8,7 @@ import com.example.schoolwebsite.entity.UserInfo;
 import com.example.schoolwebsite.service.inter.StudentServiceInter;
 import com.example.schoolwebsite.utils.IdMaker;
 import com.example.schoolwebsite.utils.MD5Class;
+import com.example.schoolwebsite.utils.StringTool;
 import org.omg.CORBA.BAD_CONTEXT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,26 +45,32 @@ public class StudentServiceImpl implements StudentServiceInter {
                 //分院判空
                 if (student.getBranch()!=null) {
                     if (student.getBranch().getId()==null){
-                        student.setBranch(null);
+                        backReturn.setMsg("分院信息不能为空");
+                        backReturn.setCode(0);
+                        return backReturn;
                     }
                 }
                 //专业判空
                 if (student.getProfession()!=null){
                     if (student.getProfession().getId()==null){
-                        student.setProfession(null);
+                        backReturn.setMsg("专业信息不能为空");
+                        backReturn.setCode(0);
+                        return backReturn;
                     }
                 }
                 //班级判空
                 if (student.getClasses()!=null){
                     if (student.getClasses().getId()==null){
-                        student.setClasses(null);
+                        backReturn.setMsg("班级信息不能为空");
+                        backReturn.setCode(0);
+                        return backReturn;
                     }
                 }
                 if (//验证分院、专业、班级信息有效性
                         professionDaoInter.selectbyid(student.getProfession().getId()).size()>0&&
                         branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
                         classDaoInter.selectbyid(student.getClasses().getId()).size()>0&&
-                        userInfoDaoInter.selectbyid(student.getIdcardnumber().getIdCardNumber(),null).size()<=0
+                        userInfoDaoInter.selectbyid(student.getIdcardnumber().getIdCardNumber(),null).size()==0
                 ){
                     student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
                     
@@ -93,7 +100,7 @@ public class StudentServiceImpl implements StudentServiceInter {
     @Override
     public BackReturn delete(String IdCardNumber) {
         BackReturn backReturn = new BackReturn();
-        if (!"".equals(IdCardNumber)){
+        if (StringTool.NotNullStringCheck(IdCardNumber)){
             if (studentDaoInter.selectbyid(IdCardNumber,null).size()>0) {
                 if (userInfoDaoInter.delete(IdCardNumber)) {
                     backReturn.setMsg("删除成功");
@@ -117,7 +124,7 @@ public class StudentServiceImpl implements StudentServiceInter {
     public BackReturn update(Student student) {
         BackReturn backReturn = new BackReturn();
         if (student!=null){
-            if (student.getIdcardnumber().getIdCardNumber()!=null){
+            if (StringTool.NotNullStringCheck(student.getIdcardnumber().getIdCardNumber())){
                 if (student.getBranch()!=null) {
                     if (student.getBranch().getId()==null){
                         student.setBranch(null);
@@ -164,7 +171,7 @@ public class StudentServiceImpl implements StudentServiceInter {
     public BackReturn select(String studentname, Integer branch,String Class,Integer profession) {
         BackReturn backReturn = new BackReturn();
         List<Student> student;
-        if (studentname==null&&branch==null&&Class==null&&profession==null){
+        if (StringTool.NullStringCheck(studentname,Class,branch,profession)){
             student = studentDaoInter.selectbyname(null,null,null,null);
             if (student.size()>0){
                 backReturn.setMsg("已查询到数据");
