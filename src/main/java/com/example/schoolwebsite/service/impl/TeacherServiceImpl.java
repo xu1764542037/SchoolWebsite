@@ -36,7 +36,7 @@ public class TeacherServiceImpl implements TeacherServiceInter {
                     &&teacher.getSalary()!=null//薪资
                     &&teacher.getSalary()!=0
                     &&teacher.getBranch().getId()!=null
-                    &&!"".equals(teacher.getIdcardnumber().getCode())){//身份
+                    &&teacher.getIdcardnumber().getCode()!=null){//身份
                 //有效性判定
                 System.out.println(userInfoDaoInter.checkuser(teacher.getIdcardnumber().getIdCardNumber())+"结果");
                 if (branchDaoInter.selectbyid(teacher.getBranch().getId()).size()>0

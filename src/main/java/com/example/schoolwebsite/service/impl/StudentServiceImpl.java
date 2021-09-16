@@ -38,7 +38,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                     &&student.getAge()>0
                     &&!"".equals(student.getSex())
                     &&!"".equals(student.getStudentName())
-                    &&!"".equals(student.getIdcardnumber().getCode())) {
+                    &&student.getIdcardnumber().getCode()!=null) {
                 //身份证后6位密码
                 student.getIdcardnumber().setPassword(MD5Class.NewPassword(student.getIdcardnumber().getIdCardNumber().substring(student.getIdcardnumber().getIdCardNumber().length()-6)));
                 //分院判空
