@@ -178,6 +178,9 @@
             <if test="profession!=null">
             and schoolwebsite.profession.professionId = #{profession}
             </if>
+            <if test="ClassId!=null">
+            and schoolwebsite.class.classId = #{ClassId}
+            </if>
     </select>
 
     <select id="selectbyid" resultMap="res">

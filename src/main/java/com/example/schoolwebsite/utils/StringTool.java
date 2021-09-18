@@ -76,7 +76,9 @@ public class StringTool {
     public static boolean NullStringCheck(Integer integer1,Integer integer2,Integer integer3,Integer integer4){
         return integer1==null&&integer2==null&&integer3==null&&integer4==null;
     }
-
+    public static boolean NullStringCheck(String str1,String str2,Integer integer1,Integer integer2,Integer Integer3){
+        return integer1==null&&integer2==null&&"".equals(str1)&&"".equals(str2)&&Integer3==null;
+    }
 
     
     

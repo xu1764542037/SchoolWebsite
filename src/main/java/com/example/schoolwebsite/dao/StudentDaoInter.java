@@ -16,6 +16,7 @@ public interface StudentDaoInter{
     List<Student> selectbyname(@Param("studentName") String studentName,
                                @Param("branch") Integer branch,
                                @Param("Class")String Class,
+                               @Param("ClassId") Integer classId,
                                @Param("profession") Integer profession);
     List<Student> selectbyid(@Param("IdCardNumber") String IdCardNumber,@Param("studentId") Integer studentId);
 }

@@ -73,7 +73,6 @@ public class StudentServiceImpl implements StudentServiceInter {
                         userInfoDaoInter.selectbyid(student.getIdcardnumber().getIdCardNumber(),null).size()==0
                 ){
                     student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
-                    
                     if (studentDaoInter.add(student)) {
                         backReturn.setMsg("添加成功");
                         backReturn.setCode(1);
@@ -93,7 +92,6 @@ public class StudentServiceImpl implements StudentServiceInter {
             backReturn.setMsg("传入参数为空，添加失败");
             backReturn.setCode(0);
         }
-
         return backReturn;
     }
 
@@ -168,11 +166,11 @@ public class StudentServiceImpl implements StudentServiceInter {
     }
 
     @Override
-    public BackReturn select(String studentname, Integer branch,String Class,Integer profession) {
+    public BackReturn select(String studentname, Integer branch,String Class,Integer profession,Integer ClassId) {
         BackReturn backReturn = new BackReturn();
         List<Student> student;
-        if (StringTool.NullStringCheck(studentname,Class,branch,profession)){
-            student = studentDaoInter.selectbyname(null,null,null,null);
+        if (StringTool.NullStringCheck(studentname,Class,branch,profession,ClassId)){
+            student = studentDaoInter.selectbyname(null,null,null,null,null);
             if (student.size()>0){
                 backReturn.setMsg("已查询到数据");
                 backReturn.setCode(1);
@@ -182,7 +180,7 @@ public class StudentServiceImpl implements StudentServiceInter {
                 backReturn.setCode(-1);
             }
         }else{
-            student = studentDaoInter.selectbyname(studentname, branch, Class, profession);
+            student = studentDaoInter.selectbyname(studentname, branch, Class,ClassId, profession);
             if (student.size()>0){
                 backReturn.setMsg("已查询到指定数据");
                 backReturn.setCode(1);

@@ -41,7 +41,8 @@ public class StudentControllerImpl implements StudentControllerInter {
     public BackReturn select(@RequestParam(value = "name",required = false) String studentname,
                              @RequestParam(value = "branch",required = false) Integer branch,
                              @RequestParam(value = "class",required = false) String Class,
+                             @RequestParam(value = "classId",required = false) Integer ClassId,
                              @RequestParam(value = "profession",required = false)Integer profession) {
-        return studentService.select(studentname, branch,Class,profession);
+        return studentService.select(studentname, branch,Class,profession,ClassId);
     }
 }

@@ -7,5 +7,5 @@ public interface StudentServiceInter {
     BackReturn add(Student student);
     BackReturn delete(String IdCardNumber);
     BackReturn update(Student student);
-    BackReturn select(String studentname,Integer branch,String Class,Integer profession);
+    BackReturn select(String studentname,Integer branch,String Class,Integer profession,Integer ClassId);
 }
