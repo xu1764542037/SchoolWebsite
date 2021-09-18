@@ -12,6 +12,7 @@ import com.example.schoolwebsite.utils.StringTool;
 import org.omg.CORBA.BAD_CONTEXT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class StudentServiceImpl implements StudentServiceInter {
     private UserInfoDaoInter userInfoDaoInter;
 
     @Override
-    public BackReturn add(Student student) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn add(Student student) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (student!=null){
             if (student.getIdcardnumber()!=null
@@ -67,18 +69,17 @@ public class StudentServiceImpl implements StudentServiceInter {
                     }
                 }
                 if (//验证分院、专业、班级信息有效性
-                        professionDaoInter.selectbyid(student.getProfession().getId()).size()>0&&
-                        branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
-                        classDaoInter.selectbyid(student.getClasses().getId()).size()>0&&
+                        checkData(student)&&
                         userInfoDaoInter.selectbyid(student.getIdcardnumber().getIdCardNumber(),null).size()==0
                 ){
                     student.setId(IdMaker.StudentIdMaker(student.getClasses().getId()));
-                    if (studentDaoInter.add(student)) {
-                        backReturn.setMsg("添加成功");
-                        backReturn.setCode(1);
-                    }else {
-                        backReturn.setMsg("系统异常，添加失败");
-                        backReturn.setCode(-1);
+                    try{
+                        if (studentDaoInter.add(student)) {
+                            backReturn.setMsg("添加成功");
+                            backReturn.setCode(1);
+                        }
+                    }catch (Exception e){
+                        throw new Exception();
                     }
                 }else{
                     backReturn.setMsg("添加失败，分院、专业、班级信息无效或该身份证已被注册，请核验后重新添加");
@@ -96,16 +97,18 @@ public class StudentServiceImpl implements StudentServiceInter {
     }
 
     @Override
-    public BackReturn delete(String IdCardNumber) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(String IdCardNumber) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (StringTool.NotNullStringCheck(IdCardNumber)){
             if (studentDaoInter.selectbyid(IdCardNumber,null).size()>0) {
-                if (userInfoDaoInter.delete(IdCardNumber)) {
-                    backReturn.setMsg("删除成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setMsg("系统异常，删除失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (userInfoDaoInter.delete(IdCardNumber)) {
+                        backReturn.setMsg("删除成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setCode(0);
@@ -119,7 +122,8 @@ public class StudentServiceImpl implements StudentServiceInter {
     }
 
     @Override
-    public BackReturn update(Student student) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(Student student) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (student!=null){
             if (StringTool.NotNullStringCheck(student.getIdcardnumber().getIdCardNumber())){
@@ -138,17 +142,14 @@ public class StudentServiceImpl implements StudentServiceInter {
                         student.setClasses(null);
                     }
                 }
-                if (//验证分院、专业、班级信息有效性
-                        professionDaoInter.selectbyid(student.getProfession().getId()).size()>0&&
-                                branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
-                                classDaoInter.selectbyid(student.getClasses().getId()).size()>0
-                ){
-                    if (studentDaoInter.update(student)) {
-                        backReturn.setMsg("修改成功");
-                        backReturn.setCode(1);
-                    }else{
-                        backReturn.setMsg("系统异常，修改失败");
-                        backReturn.setCode(-1);
+                if (checkData(student)){
+                    try{
+                        if (studentDaoInter.update(student)) {
+                            backReturn.setMsg("修改成功");
+                            backReturn.setCode(1);
+                        }
+                    }catch (Exception e){
+                        throw new Exception();
                     }
                 }else{
                     backReturn.setMsg("添加失败，分院、专业或班级信息无效，请核验后再试");
@@ -166,6 +167,7 @@ public class StudentServiceImpl implements StudentServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String studentname, Integer branch,String Class,Integer profession,Integer ClassId) {
         BackReturn backReturn = new BackReturn();
         List<Student> student;
@@ -191,5 +193,11 @@ public class StudentServiceImpl implements StudentServiceInter {
             }
         }
         return backReturn;
+    }
+    private boolean checkData(Student student){
+        //验证分院、专业、班级信息有效性
+        return professionDaoInter.selectbyid(student.getProfession().getId()).size()>0&&
+        branchDaoInter.selectbyid(student.getBranch().getId()).size()>0&&
+        classDaoInter.selectbyid(student.getClasses().getId()).size()>0;
     }
 }

@@ -20,19 +20,43 @@ public class CourseControllerImpl implements CourseControllerInter {
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Course course) {
-        return courseService.add(course);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return courseService.add(course);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id") Integer courseId) {
-        return courseService.delete(courseId);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return courseService.delete(courseId);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Course course) {
-        return courseService.update(course);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return courseService.update(course);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，修改失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

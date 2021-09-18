@@ -21,19 +21,40 @@ public class StudentControllerImpl implements StudentControllerInter {
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Student student) {
-        return studentService.add(student);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return studentService.add(student);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id")  String IdCardNumber) {
-        return studentService.delete(IdCardNumber);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return studentService.delete(IdCardNumber);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Student student) {
-        return studentService.update(student);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return studentService.update(student);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

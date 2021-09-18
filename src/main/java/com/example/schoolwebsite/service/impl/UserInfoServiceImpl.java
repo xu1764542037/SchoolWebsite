@@ -7,8 +7,10 @@ import com.example.schoolwebsite.dao.UserInfoDaoInter;
 import com.example.schoolwebsite.entity.*;
 import com.example.schoolwebsite.service.inter.UserInfoServiceInter;
 import com.example.schoolwebsite.utils.MD5Class;
+import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,26 +24,25 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
     private StudentDaoInter studentDaoInter;
     @Autowired
     private TeacherDaoInter teacherDaoInter;
-    @Autowired
-    private AdminDaoInter adminDaoInter;
 
     @Override
-    public BackReturn delete(String IdCardNumber) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(String IdCardNumber) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (!"".equals(IdCardNumber)){
+        if (StringTool.NotNullStringCheck(IdCardNumber)){
             if (userInfoDaoInter.checkuser(IdCardNumber)){
-                if (userInfoDaoInter.delete(IdCardNumber)){
-                    backReturn.setCode(1);
-                    backReturn.setMsg("删除成功");
-                }else{
-                    backReturn.setMsg("系统异常，删除失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (userInfoDaoInter.delete(IdCardNumber)){
+                        backReturn.setCode(1);
+                        backReturn.setMsg("删除成功");
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setMsg("数据不存在或已被删除，删除失败");
                 backReturn.setCode(0);
             }
-
         }else{
             backReturn.setMsg("删除条件为空，删除失败");
             backReturn.setCode(0);
@@ -50,20 +51,22 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
     }
 
     @Override
-    public BackReturn update(UserInfo userInfo) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(UserInfo userInfo) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (userInfo.getIdCardNumber()!=null&&!"".equals(userInfo.getIdCardNumber())) {
+        if (StringTool.NotNullStringCheck(userInfo.getIdCardNumber())) {
             if (userInfo.getPassword()==null&&userInfo.getCode()==null){
                 backReturn.setMsg("无修改信息，修改成功");
                 backReturn.setCode(1);
             }else {
                 userInfo.setPassword(MD5Class.NewPassword(userInfo.getPassword()));//加密
-                if (userInfoDaoInter.update(userInfo)) {
-                    backReturn.setMsg("修改成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setMsg("系统异常，修改失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (userInfoDaoInter.update(userInfo)) {
+                        backReturn.setMsg("修改成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }
         }else{
@@ -74,13 +77,14 @@ public class UserInfoServiceImpl implements UserInfoServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String IdCardNumber,String password) {
         BackReturn backReturn = new BackReturn();
         List<UserInfo> userInfoList;
         List<AllUserInfo> userInfos = new ArrayList<>();
         AllUserInfo oneUserInfo = new AllUserInfo();
         if (IdCardNumber!=null||password!=null){
-            if (IdCardNumber!=null&&password!=null){
+            if (StringTool.NotNullStringCheck(IdCardNumber, password)){
                 password = MD5Class.NewPassword(password);
                 userInfoList = userInfoDaoInter.selectbyid(IdCardNumber,password);
                 if (userInfoList.size()>0) {

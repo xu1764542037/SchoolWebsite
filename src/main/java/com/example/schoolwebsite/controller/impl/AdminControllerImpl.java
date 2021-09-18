@@ -22,19 +22,40 @@ public class AdminControllerImpl implements AdminControllerInter {
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Admin admin) {
-        return adminService.add(admin);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return adminService.add(admin);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id") String LoginId) {
-        return adminService.delete(LoginId);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return adminService.delete(LoginId);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Admin admin) {
-        return adminService.update(admin);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return adminService.update(admin);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，修改失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

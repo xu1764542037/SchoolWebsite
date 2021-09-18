@@ -24,7 +24,14 @@ public class Teacher_ClassControllerImpl implements Teacher_ClassControllerInter
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Teacher_Class teacher_class) {
-        return teacher_classService.add(teacher_class);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return teacher_classService.add(teacher_class);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
@@ -47,13 +54,27 @@ public class Teacher_ClassControllerImpl implements Teacher_ClassControllerInter
                              @RequestParam(value = "TeaId",required = false) Integer TeacherId,
                              @RequestParam(value = "ClaId",required = false) Integer ClassId,
                              @RequestParam(value = "CouId",required = false) Integer CourseId) {
-        return teacher_classService.delete(id, TeacherId, ClassId, CourseId);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return teacher_classService.delete(id, TeacherId, ClassId, CourseId);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Teacher_Class teacher_class) {
-        return teacher_classService.update(teacher_class);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return teacher_classService.update(teacher_class);
+        }catch (Exception e){
+            backReturn.setMsg("系统异常，修改失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

@@ -20,19 +20,43 @@ public class GradeControllerImpl implements GradeControllerInter {
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Grade grade) {
-        return gradeService.add(grade);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return gradeService.add(grade);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id") Integer gradeId) {
-        return gradeService.delete(gradeId);
-    }
+        BackReturn backReturn = new BackReturn();
+        try {
+            return gradeService.delete(gradeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
 
+        }
+    }
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Grade grade) {
-        return gradeService.update(grade);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return gradeService.update(grade);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，修改失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

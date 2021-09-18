@@ -20,19 +20,40 @@ public class TeacherControllerImpl implements TeacherControllerInter {
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Teacher teacher) {
-        return teacherService.add(teacher);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return teacherService.add(teacher);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，添加失败");
+            return backReturn;
+        }
     }
 
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id")  String IdCardNumber) {
-        return teacherService.delete(IdCardNumber);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return teacherService.delete(IdCardNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，删除失败");
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Teacher teacher) {
-        return teacherService.update(teacher);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return teacherService.update(teacher);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，修改失败");
+            return backReturn;
+        }
     }
 
     @Override

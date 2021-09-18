@@ -9,6 +9,7 @@ import com.example.schoolwebsite.utils.IdMaker;
 import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -22,11 +23,11 @@ public class ClassServiceImpl implements ClassServiceInter {
     private ProfessionDaoInter professionDaoInter;
 
     @Override
-    public BackReturn add(Class classes){
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn add(Class classes) throws Exception {
         BackReturn backReturn = new BackReturn();
-        Date date = new Date();
         if (classes!=null) {
-            if (!"".equals(classes.getClassName())) {
+            if (StringTool.NotNullStringCheck(classes.getClassName())) {
                 if (classes.getProfession().getId()!=null&&classes.getProfession().getId()!=0){//专业ID判空
                     if (professionDaoInter.selectbyid(classes.getProfession().getId()).size()>0) {//专业ID有效性
                         if (classDaoInter.selectbyname(classes.getClassName(),classes.getProfession().getId(),null).size()>0) {//班级查重
@@ -42,12 +43,13 @@ public class ClassServiceImpl implements ClassServiceInter {
                             backReturn.setCode(0);
                             return backReturn;
                         }
-                        if (classDaoInter.add(classes)) {
-                            backReturn.setMsg("添加成功");
-                            backReturn.setCode(1);
-                        }else{
-                            backReturn.setMsg("系统异常，添加失败");
-                            backReturn.setCode(-1);
+                        try{
+                            if (classDaoInter.add(classes)) {
+                                backReturn.setMsg("添加成功");
+                                backReturn.setCode(1);
+                            }
+                        }catch (Exception e){
+                            throw new Exception();
                         }
                     }else{
                         backReturn.setMsg("专业名称无效，添加失败");
@@ -69,16 +71,18 @@ public class ClassServiceImpl implements ClassServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer classId){
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(Integer classId) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (classId!=null&&classId!=0){
+        if (StringTool.NotNullStringCheck(classId)){
             if (classDaoInter.selectbyid(classId).size()>0){
-                if (classDaoInter.delete(classId)) {
-                    backReturn.setMsg("删除成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setMsg("系统异常，删除失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (classDaoInter.delete(classId)) {
+                        backReturn.setMsg("删除成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setMsg("数据不存在或已被清除");
@@ -92,20 +96,22 @@ public class ClassServiceImpl implements ClassServiceInter {
     }
 
     @Override
-    public BackReturn update(Class classes){
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(Class classes) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (classes!=null){
-            if (classes.getId()!=null){
+            if (StringTool.NotNullStringCheck(classes.getId())){
                 if (classDaoInter.selectbyid(classes.getId()).size()>0){
                     if (classes.getClassName()!=null&&!"".equals(classes.getClassName())){
                         classes.setClassName(CheckClassName(classes.getClassName()).getMsg());
                     }
-                    if (classDaoInter.update(classes)) {
-                        backReturn.setMsg("修改成功");
-                        backReturn.setCode(1);
-                    }else{
-                        backReturn.setMsg("系统异常。修改失败");
-                        backReturn.setCode(-1);
+                    try {
+                        if (classDaoInter.update(classes)) {
+                            backReturn.setMsg("修改成功");
+                            backReturn.setCode(1);
+                        }
+                    }catch (Exception e){
+                        throw new Exception();
                     }
                 }else{
                     backReturn.setMsg("数据不存在，无法修改");
@@ -123,11 +129,11 @@ public class ClassServiceImpl implements ClassServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String className, Integer Profession, Integer Branch){
         BackReturn backReturn = new BackReturn();
         List<Class> classes;
-
-        if (className==null&&Profession==null&&Branch==null){
+        if (StringTool.NullStringCheck(className, Profession, Branch)){
             classes = classDaoInter.selectbyname(null,null,null);
             if (classes.size() > 0) {
                 backReturn.setMsg("已查询到数据");

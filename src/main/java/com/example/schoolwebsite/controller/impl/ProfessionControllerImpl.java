@@ -20,19 +20,43 @@ public class ProfessionControllerImpl implements ProfessionControllerInter {
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Profession profession) {
+        BackReturn backReturn = new BackReturn();
+        try{
             return professionService.add(profession);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id") Integer professionId) {
+        BackReturn backReturn = new BackReturn();
+        try{
             return professionService.delete(professionId);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Profession profession) {
+        BackReturn backReturn = new BackReturn();
+        try{
             return professionService.update(profession);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，修改失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

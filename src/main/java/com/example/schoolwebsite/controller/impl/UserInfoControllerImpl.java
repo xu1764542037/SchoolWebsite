@@ -21,13 +21,29 @@ public class UserInfoControllerImpl implements UserInfoControllerInter {
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id") String IdCardNumber) {
-        return userInfoService.delete(IdCardNumber);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return userInfoService.delete(IdCardNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody UserInfo userInfo) {
-        return userInfoService.update(userInfo);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return userInfoService.update(userInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，修改失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

@@ -7,8 +7,10 @@ import com.example.schoolwebsite.entity.BackReturn;
 import com.example.schoolwebsite.service.inter.AdminServiceInter;
 import com.example.schoolwebsite.utils.AdminLoginRandom;
 import com.example.schoolwebsite.utils.MD5Class;
+import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,7 +23,8 @@ public class AdminServiceImpl implements AdminServiceInter {
     private UserInfoDaoInter userInfoDaoInter;
 
     @Override
-    public BackReturn add(Admin admin) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn add(Admin admin) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (admin!=null){
             if (admin.getCode()!=null) {
@@ -29,10 +32,15 @@ public class AdminServiceImpl implements AdminServiceInter {
                     String str = AdminLoginRandom.LoginRanDom();
                     admin.setLogin(str);
                     admin.setPassword(MD5Class.NewPassword(str.substring(str.length()-6)));
-                    if (adminDaoInter.add(admin)) {
-                        backReturn.setMsg("添加成功，账号:"+str+",密码："+str.substring(str.length()-6));
-                        backReturn.setCode(1);
+                    try{
+                        if (adminDaoInter.add(admin)) {
+                            backReturn.setMsg("添加成功，账号:"+str+",密码："+str.substring(str.length()-6));
+                            backReturn.setCode(1);
+                        }
+                    }catch (Exception e){
+                        throw new Exception();
                     }
+
                 }else{
                     backReturn.setMsg("管理员身份等级不足，无法添加");
                     backReturn.setCode(0);
@@ -49,16 +57,18 @@ public class AdminServiceImpl implements AdminServiceInter {
     }
 
     @Override
-    public BackReturn delete(String LoginId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(String LoginId) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (!"".equals(LoginId)) {
+        if (StringTool.NotNullStringCheck(LoginId)) {
             if (userInfoDaoInter.checkuser(LoginId)){
-                if (userInfoDaoInter.delete(LoginId)){
-                    backReturn.setMsg("删除成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setCode(-1);
-                    backReturn.setMsg("系统异常，删除失败");
+                try{
+                    if (userInfoDaoInter.delete(LoginId)){
+                        backReturn.setMsg("删除成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setMsg("数据不存在或已被删除");
@@ -72,20 +82,27 @@ public class AdminServiceImpl implements AdminServiceInter {
     }
 
     @Override
-    public BackReturn update(Admin admin) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(Admin admin) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (!"".equals(admin.getLogin())){
+        if (StringTool.NotNullStringCheck(admin.getLogin())){
             if (userInfoDaoInter.checkuser(admin.getLogin())){
                 if (admin.getPassword()!=null&&!"".equals(admin.getPassword())){
                     admin.setPassword(MD5Class.NewPassword(admin.getPassword()));
-                }
-                if (adminDaoInter.update(admin)){
-                    backReturn.setMsg("修改成功");
-                    backReturn.setCode(1);
                 }else{
-                    backReturn.setMsg("系统异常，修改失败");
-                    backReturn.setCode(-1);
+                    backReturn.setMsg("密码不能为空");
+                    backReturn.setCode(0);
+                    return backReturn;
                 }
+                try{
+                    if (adminDaoInter.update(admin)){
+                        backReturn.setMsg("修改成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
+                }
+
             }else{
                 backReturn.setMsg("该用户不存在，无法修改");
                 backReturn.setCode(0);
@@ -98,6 +115,7 @@ public class AdminServiceImpl implements AdminServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String Login, String Password){
         BackReturn backReturn = new BackReturn();
         List<Admin> adminList;
@@ -111,15 +129,13 @@ public class AdminServiceImpl implements AdminServiceInter {
                 backReturn.setMsg("账号或密码不能为空");
                 backReturn.setCode(0);
             }else{
-                try{
                     if (adminDaoInter.select(Login, MD5Class.NewPassword(Password))){
                         backReturn.setMsg("身份验证成功");
                         backReturn.setCode(1);
+                    }else{
+                        backReturn.setMsg("身份验证失败");
+                        backReturn.setCode(0);
                     }
-                }catch (NullPointerException e){
-                    backReturn.setMsg("身份验证失败，账号或密码错误，请检查后重试");
-                    backReturn.setCode(0);
-                }
             }
         }
         return backReturn;

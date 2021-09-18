@@ -20,19 +20,43 @@ public class ClassControllerImpl implements ClassControllerInter {
     @Override
     @PutMapping("/add")
     public BackReturn add(@RequestBody Class classes) {
-        return classService.add(classes);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return classService.add(classes);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，添加失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @GetMapping("/delete")
     public BackReturn delete(@RequestParam(value = "id") Integer classId) {
-        return classService.delete(classId);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return classService.delete(classId);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，删除失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override
     @PostMapping("/update")
     public BackReturn update(@RequestBody Class classes) {
-        return classService.update(classes);
+        BackReturn backReturn = new BackReturn();
+        try{
+            return classService.update(classes);
+        }catch (Exception e){
+            e.printStackTrace();
+            backReturn.setMsg("系统异常，修改失败");
+            backReturn.setCode(-1);
+            return backReturn;
+        }
     }
 
     @Override

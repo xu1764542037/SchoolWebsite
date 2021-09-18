@@ -5,8 +5,10 @@ import com.example.schoolwebsite.entity.BackReturn;
 import com.example.schoolwebsite.entity.Branch;
 import com.example.schoolwebsite.service.inter.BranchServiceInter;
 import com.example.schoolwebsite.utils.IdMaker;
+import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,7 +19,8 @@ public class BranchServiceImpl implements BranchServiceInter {
     private BranchDaoInter branchDaoInter;
 
     @Override
-    public BackReturn add(Branch branch){
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn add(Branch branch) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (branch==null){
             backReturn.setCode(0);
@@ -28,14 +31,15 @@ public class BranchServiceImpl implements BranchServiceInter {
                 backReturn.setMsg("该学院名称已存在，请勿重复添加");
                 return backReturn;
             }
-            if (!"".equals(branch.getBranchName())){
+            if (StringTool.NotNullStringCheck(branch.getBranchName())){
                 branch.setId(IdMaker.BranchIdMaker());
-                if (branchDaoInter.add(branch)){
-                    backReturn.setMsg("添加成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setCode(-1);
-                    backReturn.setMsg("系统异常，添加失败");
+                try{
+                    if (branchDaoInter.add(branch)){
+                        backReturn.setMsg("添加成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else {
                 backReturn.setMsg("学院名称不能为空");
@@ -46,9 +50,10 @@ public class BranchServiceImpl implements BranchServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer branchId){
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(Integer branchId) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (branchId==null){
+        if (StringTool.NullStringCheck(branchId)){
             backReturn.setCode(0);
             backReturn.setMsg("无效的删除条件");
         }else{
@@ -57,19 +62,21 @@ public class BranchServiceImpl implements BranchServiceInter {
                 backReturn.setCode(0);
                 return backReturn;
             }
-            if (branchDaoInter.delete(branchId)) {
-                backReturn.setMsg("删除成功");
-                backReturn.setCode(1);
-            }else {
-                backReturn.setCode(-1);
-                backReturn.setMsg("系统异常，删除失败");
+            try{
+                if (branchDaoInter.delete(branchId)) {
+                    backReturn.setMsg("删除成功");
+                    backReturn.setCode(1);
+                }
+            }catch (Exception e){
+                throw new Exception();
             }
         }
         return backReturn;
     }
 
     @Override
-    public BackReturn update(Branch branch){
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(Branch branch) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (branchDaoInter.selectbyid(branch.getId()).size()>0) {
             if ("".equals(branch.getBranchName())) {
@@ -77,12 +84,13 @@ public class BranchServiceImpl implements BranchServiceInter {
                 backReturn.setCode(0);
                 return backReturn;
             }else {
-                if (branchDaoInter.Update(branch)) {
-                    backReturn.setMsg("修改成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setMsg("系统异常，修改失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (branchDaoInter.Update(branch)) {
+                        backReturn.setMsg("修改成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }
         }else{
@@ -93,10 +101,11 @@ public class BranchServiceImpl implements BranchServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String branchName){
         BackReturn backReturn = new BackReturn();
         List<Branch> branches;
-        if ("".equals(branchName)) {
+        if (StringTool.NullStringCheck(branchName)) {
             branches = branchDaoInter.select();
             if (branches.size()>0){
                 backReturn.setObj(branches);

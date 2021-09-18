@@ -6,8 +6,10 @@ import com.example.schoolwebsite.entity.BackReturn;
 import com.example.schoolwebsite.entity.Profession;
 import com.example.schoolwebsite.service.inter.ProfessionServiceInter;
 import com.example.schoolwebsite.utils.IdMaker;
+import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,7 +23,8 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     private BranchDaoInter branchDaoInter;
 
     @Override
-    public BackReturn add(Profession profession) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn add(Profession profession) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (profession == null) {
             backReturn.setMsg("添加内容为空，添加失败");
@@ -33,18 +36,19 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
             {
                 if (branchDaoInter.selectbyid(profession.getBranch().getId()).size() > 0) {
                     //对分院代码有效性进行判定
-                    if (professionDaoInter.selectbyname(profession.getProfessionName(), profession.getBranch().getId()).size() > 0) {
+                    if (professionDaoInter.selectbyname(profession.getProfessionName(),profession.getBranch().getId()).size() > 0) {
                         backReturn.setMsg("专业已存在，请勿重复添加");
                         backReturn.setCode(0);
                         return backReturn;
                     }
                     profession.setId(IdMaker.ProfessionIdMaker());
-                    if (professionDaoInter.add(profession)) {
-                        backReturn.setMsg("添加成功");
-                        backReturn.setCode(1);
-                    } else {
-                        backReturn.setMsg("系统异常、添加失败");
-                        backReturn.setCode(-1);
+                    try{
+                        if (professionDaoInter.add(profession)) {
+                            backReturn.setMsg("添加成功");
+                            backReturn.setCode(1);
+                        }
+                    }catch(Exception e){
+                        throw new Exception();
                     }
                 } else {
                     backReturn.setMsg("分院信息无效,添加失败");
@@ -59,19 +63,21 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer professionId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(Integer professionId) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (professionId == null) {
+        if (StringTool.NullStringCheck(professionId)){
             backReturn.setMsg("输入的删除条件无效，删除失败");
             backReturn.setCode(0);
         } else {
-            if (professionDaoInter.selectbyid(professionId).size() > 0) {
-                if (professionDaoInter.delete(professionId)) {
-                    backReturn.setMsg("删除成功");
-                    backReturn.setCode(1);
-                } else {
-                    backReturn.setMsg("系统异常，删除失败");
-                    backReturn.setCode(-1);
+            if (professionDaoInter.selectbyid(professionId).size() > 0){
+                try{
+                    if (professionDaoInter.delete(professionId)) {
+                        backReturn.setMsg("删除成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             } else {
                 backReturn.setMsg("数据不存在，删除失败");
@@ -82,15 +88,17 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     }
 
     @Override
-    public BackReturn update(Profession profession) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(Profession profession) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (professionDaoInter.selectbyid(profession.getId()).size() > 0) {
-            if (professionDaoInter.update(profession)) {
-                backReturn.setMsg("修改成功");
-                backReturn.setCode(1);
-            } else {
-                backReturn.setMsg("系统异常，修改失败");
-                backReturn.setCode(-1);
+            try{
+                if (professionDaoInter.update(profession)) {
+                    backReturn.setMsg("修改成功");
+                    backReturn.setCode(1);
+                }
+            }catch (Exception e){
+                throw new Exception();
             }
         } else {
             backReturn.setMsg("该专业不存在，修改失败");
@@ -100,11 +108,11 @@ public class ProfessionServiceImpl implements ProfessionServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String professionName, Integer branch) {
         BackReturn backReturn = new BackReturn();
         List<Profession> professions;
-
-        if (professionName == null && branch == null) {
+        if (StringTool.NullStringCheck(professionName, branch)) {
             professions = professionDaoInter.selectbyname(null, null);
             if (professions.size() > 0) {
                 backReturn.setMsg("已查询到数据");

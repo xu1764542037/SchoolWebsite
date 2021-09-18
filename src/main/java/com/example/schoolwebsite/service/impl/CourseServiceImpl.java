@@ -6,8 +6,10 @@ import com.example.schoolwebsite.entity.Branch;
 import com.example.schoolwebsite.entity.Course;
 import com.example.schoolwebsite.service.inter.CourseServiceInter;
 import com.example.schoolwebsite.utils.IdMaker;
+import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,21 +20,23 @@ public class CourseServiceImpl implements CourseServiceInter {
     private CourseDaoInter courseDaoInter;
 
     @Override
-    public BackReturn add(Course course) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn add(Course course) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (course.getCourseName()!=null&&!"".equals(course.getCourseName())){
+        if (StringTool.NotNullStringCheck(course.getCourseName())){
             if (courseDaoInter.selectbyname(course.getCourseName()).size()>0){
                 backReturn.setMsg("课程已存在，请勿重复添加");
                 backReturn.setCode(0);
                 return backReturn;
             }
             course.setId(IdMaker.CourseIdMaker());
-            if (courseDaoInter.add(course)) {
-                backReturn.setMsg("添加成功");
-                backReturn.setCode(1);
-            }else{
-                backReturn.setMsg("系统异常，添加失败");
-                backReturn.setCode(-1);
+            try{
+                if (courseDaoInter.add(course)) {
+                    backReturn.setMsg("添加成功");
+                    backReturn.setCode(1);
+                }
+            }catch (Exception e){
+                throw new Exception();
             }
         }else{
             backReturn.setMsg("无效数据或课程名为空，添加失败");
@@ -42,16 +46,18 @@ public class CourseServiceImpl implements CourseServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer courseId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(Integer courseId) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (courseId!=null&&courseId!=0){
+        if (StringTool.NotNullStringCheck(courseId)){
             if (courseDaoInter.selectbyid(courseId).size()>0){
-                if (courseDaoInter.delete(courseId)) {
-                    backReturn.setCode(1);
-                    backReturn.setMsg("删除成功");
-                }else{
-                    backReturn.setMsg("系统异常，删除失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (courseDaoInter.delete(courseId)) {
+                        backReturn.setCode(1);
+                        backReturn.setMsg("删除成功");
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setMsg("数据不存在或已被删除");
@@ -65,16 +71,18 @@ public class CourseServiceImpl implements CourseServiceInter {
     }
 
     @Override
-    public BackReturn update(Course course) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(Course course) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (course.getId()!=null&&course.getId()!=0&&course.getCourseName()!=null&&!"".equals(course.getCourseName())){
+        if (StringTool.NotNullStringCheck(course.getCourseName(),course.getId())){
             if (courseDaoInter.selectbyid(course.getId()).size()>0) {
-                if (courseDaoInter.update(course)) {
-                    backReturn.setMsg("修改成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setMsg("系统异常，修改失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (courseDaoInter.update(course)){
+                        backReturn.setMsg("修改成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setMsg("数据不存在，无法修改");
@@ -88,10 +96,11 @@ public class CourseServiceImpl implements CourseServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String courseName) {
         BackReturn backReturn = new BackReturn();
         List<Course> courses;
-        if ("".equals(courseName)){
+        if (StringTool.NullStringCheck(courseName)){
             courses = courseDaoInter.selectbyname("");
             if (courses.size()>0){
                 backReturn.setCode(0);

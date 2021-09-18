@@ -7,8 +7,10 @@ import com.example.schoolwebsite.entity.BackReturn;
 import com.example.schoolwebsite.entity.Grade;
 import com.example.schoolwebsite.service.inter.GradeServiceInter;
 import com.example.schoolwebsite.utils.IdMaker;
+import com.example.schoolwebsite.utils.StringTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,22 +25,22 @@ public class GradeServiceImpl implements GradeServiceInter {
     private CourseDaoInter courseDaoInter;
 
     @Override
-    public BackReturn add(Grade grade) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn add(Grade grade) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (grade!=null){
             if (grade.getStudent()!=null&&grade.getCourse()!=null){
-                if (
-                        studentDaoInter.selectbyid(null,grade.getStudent().getId()).size()>0&&
-                        courseDaoInter.selectbyid(grade.getCourse().getId()).size()>0
-                ){
-                    if (grade.getGrade()!=null){
+                if (studentDaoInter.selectbyid(null,grade.getStudent().getId()).size()>0&&
+                        courseDaoInter.selectbyid(grade.getCourse().getId()).size()>0){
+                    if (StringTool.NotNullStringCheck(grade.getGrade())){
                         grade.setId(IdMaker.GradeIdMaker());
-                        if (gradeDaoInter.add(grade)) {
-                            backReturn.setMsg("添加成功");
-                            backReturn.setCode(1);
-                        }else{
-                            backReturn.setMsg("系统异常，添加失败");
-                            backReturn.setCode(-1);
+                        try{
+                            if (gradeDaoInter.add(grade)) {
+                                backReturn.setMsg("添加成功");
+                                backReturn.setCode(1);
+                            }
+                        }catch (Exception e){
+                            throw new Exception();
                         }
                     }else{
                         backReturn.setCode(0);
@@ -60,16 +62,18 @@ public class GradeServiceImpl implements GradeServiceInter {
     }
 
     @Override
-    public BackReturn delete(Integer gradeId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn delete(Integer gradeId) throws Exception {
         BackReturn backReturn = new BackReturn();
-        if (gradeId!=null&&gradeId!=0){
+        if (StringTool.NotNullStringCheck(gradeId)){
             if (gradeDaoInter.selectbyid(gradeId).size()>0) {
-                if (gradeDaoInter.delete(gradeId)) {
-                    backReturn.setMsg("删除成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setMsg("系统异常，删除失败");
-                    backReturn.setCode(-1);
+                try{
+                    if (gradeDaoInter.delete(gradeId)) {
+                        backReturn.setMsg("删除成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setMsg("数据不存在或已被清除，删除失败");
@@ -83,10 +87,11 @@ public class GradeServiceImpl implements GradeServiceInter {
     }
 
     @Override
-    public BackReturn update(Grade grade) {
+    @Transactional(rollbackFor = Exception.class)
+    public BackReturn update(Grade grade) throws Exception {
         BackReturn backReturn = new BackReturn();
         if (grade!=null) {
-            if (grade.getId()!=null&&grade.getId()!=0) {
+            if (StringTool.NotNullStringCheck(grade.getGrade())){
                 if (grade.getCourse()!=null){//Course判空
                     if (grade.getCourse().getId()==null) {
                         grade.setCourse(null);
@@ -105,12 +110,13 @@ public class GradeServiceImpl implements GradeServiceInter {
                         }
                     }
                 }
-                if (gradeDaoInter.update(grade)) {
-                    backReturn.setMsg("修改成功");
-                    backReturn.setCode(1);
-                }else{
-                    backReturn.setMsg("系统异常");
-                    backReturn.setCode(-1);
+                try{
+                    if (gradeDaoInter.update(grade)) {
+                        backReturn.setMsg("修改成功");
+                        backReturn.setCode(1);
+                    }
+                }catch (Exception e){
+                    throw new Exception();
                 }
             }else{
                 backReturn.setMsg("数据信息不完整，修改失败");
@@ -124,10 +130,11 @@ public class GradeServiceImpl implements GradeServiceInter {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BackReturn select(String studentName, String courseName) {
         BackReturn backReturn = new BackReturn();
         List<Grade> gradeList;
-        if (studentName==null&&courseName==null){
+        if (StringTool.NullStringCheck(studentName, courseName)){
             gradeList = gradeDaoInter.selectbyname(null, null);
             if (gradeList.size()>0){
                 backReturn.setMsg("已查询到数据");
