@@ -208,6 +208,7 @@ public class Teacher_ClassServiceImpl implements Teacher_ClassServiceInter {
             if (teacher_classes.size()>0){
                 backReturn.setMsg("已查询到指定数据");
                 backReturn.setCode(1);
+                backReturn.setObj(teacher_classes);
             }else{
                 backReturn.setMsg("未查询到数据");
                 backReturn.setCode(0);

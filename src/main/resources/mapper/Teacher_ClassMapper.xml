@@ -9,9 +9,11 @@
         <result column="description" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <association property="teacher" javaType="com.example.schoolwebsite.entity.Teacher">
             <id column="teacherId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
-            <result column="IdCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" property="idcardnumber"/>
             <result column="teacherName" jdbcType="VARCHAR" javaType="java.lang.String" property="teacherName"/>
             <result column="teacherSex" jdbcType="VARCHAR" javaType="java.lang.String" property="sex"/>
+            <association property="idcardnumber" javaType="com.example.schoolwebsite.entity.UserInfo">
+                <id column="IdCardNumber" jdbcType="VARCHAR" javaType="java.lang.String" property="idCardNumber"/>
+            </association>
             <association property="branch" javaType="com.example.schoolwebsite.entity.Branch">
                 <id column="branchId" jdbcType="INTEGER" javaType="java.lang.Integer" property="id"/>
                 <result column="branchName" jdbcType="VARCHAR" javaType="java.lang.String" property="branchName"/>
@@ -121,7 +123,7 @@
         id = #{teacher_class.id}
     </update>
 
-    <select id="select" resultType="com.example.schoolwebsite.entity.Teacher_Class">
+    <select id="select" resultMap="res">
         select `teacher-class-course`.id
              , `teacher-class-course`.teacherId
              , `teacher-class-course`.classId
