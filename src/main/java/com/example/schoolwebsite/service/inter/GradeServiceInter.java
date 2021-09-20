@@ -7,5 +7,5 @@ public interface GradeServiceInter {
     BackReturn add(Grade grade) throws Exception;
     BackReturn delete(Integer gradeId) throws Exception;
     BackReturn update(Grade grade) throws Exception;
-    BackReturn select(String studentName,String courseName);
+    BackReturn select(String studentName,Integer studentId,String courseName);
 }

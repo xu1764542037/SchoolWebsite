@@ -93,6 +93,9 @@
              <if test="studentName!=null">
                 and student.studentName like CONCAT(#{studentName},'%')
              </if>
+             <if test="studentId!=null">
+                and student.studentId = #{studentId}
+             </if>
              <if test="courseName!=null">
                 and course.courseName like CONCAT('%',#{courseName},'%')
              </if>

@@ -7,5 +7,5 @@ public interface GradeControllerInter {
     BackReturn add(Grade grade);
     BackReturn delete(Integer gradeId);
     BackReturn update(Grade grade);
-    BackReturn select(String studentName,String courseName);
+    BackReturn select(String studentName,Integer studentId,String courseName);
 }

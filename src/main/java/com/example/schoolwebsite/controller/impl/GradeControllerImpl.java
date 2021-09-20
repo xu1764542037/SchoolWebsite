@@ -62,7 +62,8 @@ public class GradeControllerImpl implements GradeControllerInter {
     @Override
     @GetMapping("/select")
     public BackReturn select(@RequestParam(value = "stuName",required = false) String studentName,
+                             @RequestParam(value = "id",required = false)Integer studentId,
                              @RequestParam(value = "couName",required = false) String courseName){
-        return gradeService.select(studentName, courseName);
+        return gradeService.select(studentName,studentId,courseName);
     }
 }

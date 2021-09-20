@@ -14,6 +14,6 @@ public interface GradeDaoInter{
     Boolean add(@Param("grade") Grade grade);
     Boolean delete(@Param("gradeId") Integer gradeId);
     Boolean update(@Param("grade") Grade grade);
-    List<Grade> selectbyname(@Param("studentName") String studentName, @Param("courseName") String courseName);
+    List<Grade> selectbyname(@Param("studentName") String studentName,@Param("studentId")Integer studentId,@Param("courseName") String courseName);
     List<Grade> selectbyid(@Param("gradeId") Integer gradeId);
 }

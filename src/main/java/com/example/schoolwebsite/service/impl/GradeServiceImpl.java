@@ -131,11 +131,11 @@ public class GradeServiceImpl implements GradeServiceInter {
 
     @Override
     @Transactional(readOnly = true)
-    public BackReturn select(String studentName, String courseName) {
+    public BackReturn select(String studentName,Integer studentId, String courseName) {
         BackReturn backReturn = new BackReturn();
         List<Grade> gradeList;
         if (StringTool.NullStringCheck(studentName, courseName)){
-            gradeList = gradeDaoInter.selectbyname(null, null);
+            gradeList = gradeDaoInter.selectbyname(null, null,null);
             if (gradeList.size()>0){
                 backReturn.setMsg("已查询到数据");
                 backReturn.setCode(1);
@@ -145,7 +145,7 @@ public class GradeServiceImpl implements GradeServiceInter {
                 backReturn.setMsg("未查询到数据，系统异常或数据被清空");
             }
         }else{
-            gradeList = gradeDaoInter.selectbyname(studentName, courseName);
+            gradeList = gradeDaoInter.selectbyname(studentName,studentId,courseName);
             if (gradeList.size()>0){
                 backReturn.setMsg("已查询到指定数据");
                 backReturn.setCode(1);
